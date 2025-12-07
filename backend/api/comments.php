@@ -64,6 +64,25 @@ switch ($method) {
             $stmt->execute([$comment_id]);
             $comment = $stmt->fetch();
             
+            // Gönderi sahibine bildirim oluştur
+            try {
+                $stmt = $db->prepare("SELECT user_id FROM posts WHERE id = ?");
+                $stmt->execute([$post_id]);
+                $post_owner = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($post_owner && isset($post_owner['user_id']) && $post_owner['user_id'] != getCurrentUserId()) {
+                    // Bildirim oluştur (yorumlar için spam kontrolü yok, her yorum bildirimi gönderilir)
+                    $stmt = $db->prepare("
+                        INSERT INTO notifications (user_id, type, actor_id, post_id, comment_id)
+                        VALUES (?, 'comment', ?, ?, ?)
+                    ");
+                    $stmt->execute([$post_owner['user_id'], getCurrentUserId(), $post_id, $comment_id]);
+                }
+            } catch (PDOException $e) {
+                // Bildirim oluşturma hatası kritik değil, devam et
+                error_log("Bildirim oluşturma hatası (comment): " . $e->getMessage());
+            }
+            
             jsonResponse([
                 'success' => true,
                 'message' => 'Yorum eklendi',

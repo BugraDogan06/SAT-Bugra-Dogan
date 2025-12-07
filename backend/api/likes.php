@@ -37,6 +37,36 @@ switch ($method) {
             $stmt = $db->prepare("INSERT INTO likes (user_id, post_id) VALUES (?, ?)");
             $stmt->execute([$user_id, $post_id]);
             $action = 'added';
+            
+            // Gönderi sahibine bildirim oluştur
+            try {
+                $stmt = $db->prepare("SELECT user_id FROM posts WHERE id = ?");
+                $stmt->execute([$post_id]);
+                $post_owner = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($post_owner && isset($post_owner['user_id']) && $post_owner['user_id'] != $user_id) {
+                    // Aynı bildirimin son 1 saat içinde oluşturulup oluşturulmadığını kontrol et (spam önleme)
+                    $stmt = $db->prepare("
+                        SELECT id FROM notifications 
+                        WHERE user_id = ? AND actor_id = ? AND type = 'like' AND post_id = ?
+                        AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                        LIMIT 1
+                    ");
+                    $stmt->execute([$post_owner['user_id'], $user_id, $post_id]);
+                    
+                    if (!$stmt->fetch()) {
+                        // Bildirim oluştur
+                        $stmt = $db->prepare("
+                            INSERT INTO notifications (user_id, type, actor_id, post_id)
+                            VALUES (?, 'like', ?, ?)
+                        ");
+                        $stmt->execute([$post_owner['user_id'], $user_id, $post_id]);
+                    }
+                }
+            } catch (PDOException $e) {
+                // Bildirim oluşturma hatası kritik değil, devam et
+                error_log("Bildirim oluşturma hatası (like): " . $e->getMessage());
+            }
         }
         
         // Beğeni sayısını al

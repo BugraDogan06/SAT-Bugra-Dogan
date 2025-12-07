@@ -1,0 +1,349 @@
+/* ============================================
+   RESPONSIVE & CROSS-BROWSER COMPATIBILITY
+   ============================================ */
+
+/* Viewport Fix for iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Cross-Browser Animations */
+@-webkit-keyframes heroGlow {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.75; }
+}
+@-moz-keyframes heroGlow {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.75; }
+}
+@keyframes heroGlow {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.75; }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch devices */
+  .post-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .nav-link:hover {
+    transform: none;
+  }
+  
+  button:hover,
+  .btn:hover {
+    transform: none;
+  }
+  
+  /* Larger touch targets */
+  button,
+  .btn,
+  .nav-link,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Mobile First - Base Styles */
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Image Responsive */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive Images */
+.responsive-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Flexbox Fallback */
+.flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+/* Grid Fallback */
+.grid {
+  display: -ms-grid;
+  display: grid;
+}
+
+/* Smooth Scrolling with Fallback */
+html {
+  scroll-behavior: smooth;
+}
+
+@supports not (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Backdrop Filter Fallback */
+.backdrop-blur {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur {
+    background-color: rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Transform with Prefixes */
+.transform {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Transition with Prefixes */
+.transition {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* Animation with Prefixes */
+@-webkit-keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@-moz-keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Media Queries - Mobile (320px - 640px) */
+@media screen and (max-width: 640px) {
+  /* Hide desktop elements */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Show mobile elements */
+  .mobile-only {
+    display: block !important;
+  }
+  
+  /* Font sizes */
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  
+  /* Padding adjustments */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Navbar mobile */
+  #leftSidebarNav {
+    display: none !important;
+  }
+  
+  /* Post cards */
+  .post-card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Buttons */
+  button,
+  .btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+  
+  /* Modals */
+  .modal-content {
+    width: 95%;
+    max-width: 95%;
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  
+  /* Forms */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    width: 100%;
+  }
+}
+
+/* Media Queries - Tablet (641px - 1024px) */
+@media screen and (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  #leftSidebarNav {
+    width: 80px;
+  }
+  
+  .post-card {
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+  }
+}
+
+/* Media Queries - Desktop (1025px+) */
+@media screen and (min-width: 1025px) {
+  .mobile-only {
+    display: none !important;
+  }
+  
+  .desktop-only {
+    display: block !important;
+  }
+}
+
+/* Landscape Orientation */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  /* Adjust for landscape mobile */
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2),
+       (min-resolution: 192dpi) {
+  /* Sharper images and borders */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    -webkit-animation-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+    animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  /* Already dark, but ensure compatibility */
+  body {
+    background-color: #180000;
+    color: #f1f1f1;
+  }
+}
+
+/* Focus Styles for Accessibility */
+*:focus {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+/* Skip to Content Link (Accessibility) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #ef4444;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Error States */
+.error {
+  border-color: #ef4444 !important;
+  color: #ef4444;
+}
+
+/* Success States */
+.success {
+  border-color: #10b981 !important;
+  color: #10b981;
+}
+

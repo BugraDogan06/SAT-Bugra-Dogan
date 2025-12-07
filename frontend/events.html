@@ -8,11 +8,240 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background-color: #180000;
       color: #f1f1f1;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(239, 68, 68, 0.2), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(239,68,68,0.15), transparent 60%);
+      animation: heroGlow 10s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes heroGlow {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 0.75; }
+    }
+    .animated-bg-glow {
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239,68,68,0.15), transparent 60%);
+      top: -350px;
+      right: -250px;
+      filter: blur(60px);
+      animation: heroPulse 8s infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes heroPulse {
+      from { transform: scale(0.9) translateY(10px); opacity: 0.5; }
+      to { transform: scale(1.05) translateY(-10px); opacity: 0.8; }
+    }
+    .animated-bg-glow-2 {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(220,38,38,0.12), transparent 60%);
+      bottom: -300px;
+      left: -200px;
+      filter: blur(50px);
+      animation: heroPulse 10s infinite alternate-reverse;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Login Sayfası Araba Animasyonları */
+    .car-silhouette {
+      position: fixed;
+      width: 800px;
+      height: 400px;
+      bottom: -80px;
+      right: -150px;
+      opacity: 0.25;
+      background: linear-gradient(135deg, rgba(239,68,68,0.5), rgba(220,38,38,0.3), transparent);
+      clip-path: polygon(15% 65%, 20% 55%, 28% 48%, 38% 42%, 50% 40%, 65% 42%, 78% 48%, 88% 55%, 93% 65%, 96% 75%, 93% 82%, 88% 88%, 78% 92%, 65% 94%, 50% 95%, 38% 94%, 28% 92%, 20% 88%, 15% 82%);
+      box-shadow: 0 0 60px rgba(239,68,68,0.4);
+      animation: carDrive 15s ease-in-out infinite;
+      filter: blur(1px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .car-silhouette::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: carShine 3s ease-in-out infinite;
+    }
+    .speed-streak {
+      position: fixed;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(239,68,68,0.8), rgba(255,255,255,0.6), rgba(239,68,68,0.8), transparent);
+      box-shadow: 0 0 10px rgba(239,68,68,0.8);
+      animation: speedStreak 1.5s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .speed-streak:nth-child(1) { bottom: 25%; animation-delay: 0s; height: 3px; }
+    .speed-streak:nth-child(2) { bottom: 45%; animation-delay: 0.3s; height: 4px; }
+    .speed-streak:nth-child(3) { bottom: 65%; animation-delay: 0.6s; height: 3px; }
+    .speed-streak:nth-child(4) { bottom: 35%; animation-delay: 0.9s; height: 2px; }
+    .speed-streak:nth-child(5) { bottom: 55%; animation-delay: 1.2s; height: 2px; }
+    .neon-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239,68,68,0.5), rgba(220,38,38,0.3), transparent 70%);
+      filter: blur(50px);
+      animation: neonPulse 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neon-glow.top-left {
+      top: -150px;
+      left: -150px;
+    }
+    .neon-glow.bottom-right {
+      bottom: -150px;
+      right: -150px;
+      animation-delay: 1.5s;
+    }
+    .exhaust-smoke {
+      position: fixed;
+      width: 60px;
+      height: 120px;
+      bottom: 50px;
+      right: 100px;
+      background: radial-gradient(ellipse at bottom, rgba(100,100,100,0.4), transparent);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: exhaustRise 2s ease-out infinite;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .exhaust-smoke::before,
+    .exhaust-smoke::after {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 80px;
+      background: radial-gradient(ellipse at bottom, rgba(120,120,120,0.3), transparent);
+      border-radius: 50%;
+      animation: exhaustRise 2.5s ease-out infinite;
+    }
+    .exhaust-smoke::before {
+      left: -20px;
+      animation-delay: 0.3s;
+    }
+    .exhaust-smoke::after {
+      right: -20px;
+      animation-delay: 0.6s;
+    }
+    @keyframes carDrive {
+      0%, 100% { transform: translateX(0) translateY(0) scale(1); opacity: 0.25; }
+      25% { transform: translateX(-30px) translateY(-10px) scale(1.02); opacity: 0.3; }
+      50% { transform: translateX(-60px) translateY(-5px) scale(1.05); opacity: 0.35; }
+      75% { transform: translateX(-30px) translateY(-10px) scale(1.02); opacity: 0.3; }
+    }
+    @keyframes carShine {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+    @keyframes speedStreak {
+      0% { transform: translateX(-100%); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+    @keyframes neonPulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+    @keyframes exhaustRise {
+      0% { transform: translateY(0) scaleY(1); opacity: 0.6; }
+      100% { transform: translateY(-150px) scaleY(1.5); opacity: 0; }
+    }
+    /* Arka Plan Araba Görseli - Kırmızı-Siyah Tonlarında Spor Araba */
+    .background-car {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      opacity: 0.8;
+      z-index: 0;
+      filter: brightness(0.5) contrast(1.8) saturate(1.6) hue-rotate(-5deg);
+      animation: carFloat 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .background-car img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+    .background-car::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.2) 60%, transparent 100%);
+      z-index: 1;
+    }
+    .background-car::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center 70%, rgba(239,68,68,0.15) 0%, transparent 50%);
+      z-index: 2;
+    }
+    @keyframes carFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+      50% { transform: translateX(-50%) translateY(-15px) scale(1.01); }
+    }
+    /* Navbar Glow Efektleri */
+    #leftSidebarNav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(239,68,68,0.1) 0%, transparent 50%, rgba(239,68,68,0.1) 100%);
+      animation: navbarGlow 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    @keyframes navbarGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    nav.sticky::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(239,68,68,0.1), transparent);
+      animation: navbarGlow 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
     }
     .neon {
       font-family: 'Orbitron', sans-serif;
@@ -24,46 +253,506 @@
       0%, 100% { opacity: 1; text-shadow: 0 0 10px #ff2b2b, 0 0 20px #ff2b2b; }
       50% { opacity: 0.7; text-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff4d4d; }
     }
+    /* Sol Navbar Stilleri */
+    #leftSidebarNav {
+      overflow: visible;
+    }
+    .nav-link {
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .nav-link:hover {
+      transform: translateX(4px);
+    }
+    .nav-tooltip {
+      position: absolute;
+      left: calc(100% + 12px);
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      z-index: 1000;
+    }
+    .nav-link:hover .nav-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    .nav-tooltip::before {
+      content: '';
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-right-color: rgba(0, 0, 0, 0.9);
+    }
+    .nav-link.active > div {
+      background: rgba(239, 68, 68, 0.4);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
     .event-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #0a0a0a;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .event-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(220, 38, 38, 0.3), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .event-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.1), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
     .event-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 30px rgba(255, 0, 0, 0.25);
+      transform: translateY(-12px) rotateX(5deg);
+      box-shadow: 
+        0 25px 80px rgba(239, 68, 68, 0.5),
+        0 0 60px rgba(239, 68, 68, 0.3),
+        inset 0 0 30px rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.8);
+    }
+    .event-card:hover::before {
+      opacity: 1;
+    }
+    .event-card:hover::after {
+      opacity: 1;
+    }
+    .event-card img {
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+      filter: brightness(0.9);
+    }
+    .event-card:hover img {
+      transform: scale(1.15) translateY(-5px);
+      filter: brightness(1.1);
+    }
+    .event-image-wrapper {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    }
+    .event-image-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%);
+      z-index: 1;
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    #calendarGrid > div {
+      min-height: 80px;
+      transition: all 0.3s ease;
+    }
+    #calendarGrid > div:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+    #calendarGrid > div img {
+      max-height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      margin: 0 auto;
+      transition: transform 0.3s ease;
+    }
+    #calendarGrid > div:hover img {
+      transform: scale(1.1);
+    }
+    .calendar-day {
+      position: relative;
+      overflow: hidden;
+    }
+    .calendar-day::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .calendar-day:hover::after {
+      opacity: 1;
+    }
+    .calendar-container {
+      background: linear-gradient(135deg, #0f0f0f, #050505);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.8),
+        inset 0 0 30px rgba(239, 68, 68, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .calendar-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.8), transparent);
+    }
+    .section-title {
+      background: linear-gradient(135deg, #ffffff, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .admin-btn {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      transition: all 0.3s ease;
+    }
+    .admin-btn:hover {
+      box-shadow: 0 6px 25px rgba(239, 68, 68, 0.6);
+      transform: translateY(-2px);
+    }
+    .nav-btn {
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .nav-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      transform: scale(1.1);
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    @media (max-width: 768px) {
+      #calendarGrid > div {
+        min-height: 60px;
+        font-size: 0.875rem;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Arka Plan Görseli - Ana Katman -->
+  <div class="fixed inset-0" style="z-index: 0;">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center_70%,_var(--tw-gradient-stops))] from-red-900/20 via-transparent to-transparent"></div>
+  </div>
+  
+  <!-- Arka Plan Araba Görseli - Kırmızı-Siyah Tonlarında Spor Araba -->
+  <div class="background-car">
+    <img src="https://images.pexels.com/photos/3802508/pexels-photo-3802508.jpeg?auto=compress&cs=tinysrgb&w=1920" 
+         alt="Kırmızı Spor Araba">
+  </div>
+  
+  <!-- Ekstra Gradient Katmanları -->
+  <div class="fixed inset-0" style="z-index: 0;">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 via-transparent to-black/50"></div>
+  </div>
+  
+  <!-- Animasyonlu Arka Plan Glow Efektleri -->
+  <div class="animated-bg-glow"></div>
+  <div class="animated-bg-glow-2"></div>
+  
+  <!-- Araba Animasyonları -->
+  <div class="car-silhouette"></div>
+  <div class="speed-streak"></div>
+  <div class="speed-streak"></div>
+  <div class="speed-streak"></div>
+  <div class="speed-streak"></div>
+  <div class="speed-streak"></div>
+  <div class="neon-glow top-left"></div>
+  <div class="neon-glow bottom-right"></div>
+  <div class="exhaust-smoke"></div>
 
-  <!-- Navbar -->
-  <nav class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-between px-8 py-4 border-b border-red-700">
-    <div class="flex space-x-6 text-gray-300">
-      <a href="../index.html" class="hover:text-red-500">Keşfet</a>
-      <a href="events.html" class="hover:text-red-500 text-red-500">Etkinlikler</a>
-      <a href="profile.html" class="hover:text-red-500">Profil</a>
+  <!-- Sol Sidebar Navbar -->
+  <nav id="leftSidebarNav" class="fixed left-0 top-0 h-full w-20 lg:w-24 z-50 bg-black/90 backdrop-blur-md border-r border-red-700/50 hidden lg:flex flex-col items-center py-6 space-y-6">
+    <!-- Navigasyon Linkleri -->
+    <div class="flex-1 flex flex-col items-center justify-center space-y-6">
+      <a href="index.html" class="nav-link group relative" title="Keşfet">
+        <div class="w-10 h-10 rounded-lg bg-red-600/20 hover:bg-red-600/40 flex items-center justify-center transition-all duration-300 border border-transparent hover:border-red-600">
+          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <span class="nav-tooltip">Keşfet</span>
+      </a>
+      
+      <a href="events.html" class="nav-link group relative active" title="Etkinlikler">
+        <div class="w-10 h-10 rounded-lg bg-red-600/40 hover:bg-red-600/50 flex items-center justify-center transition-all duration-300 border border-red-600">
+          <svg class="w-6 h-6 text-red-300 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <span class="nav-tooltip">Etkinlikler</span>
+      </a>
+      
+      <a href="profile.html" class="nav-link group relative" title="Garajım">
+        <div class="w-10 h-10 rounded-lg bg-red-600/20 hover:bg-red-600/40 flex items-center justify-center transition-all duration-300 border border-transparent hover:border-red-600">
+          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300 transition" fill="currentColor" viewBox="0 0 252.094 252.094">
+            <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z M70.352,159.384l10.161-24.754c2.089-5.088,8.298-9.251,13.798-9.251h63.363c5.5,0,11.709,4.163,13.798,9.251l10.161,24.754c2.089,5.088-0.702,9.251-6.202,9.251H76.554C71.054,168.635,68.263,164.472,70.352,159.384z M97.292,199.635c0,2.75-2.25,5-5,5H71.554c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.738c2.75,0,5,2.25,5,5V199.635z M185.203,199.635c0,2.75-2.25,5-5,5h-20.736c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.736c2.75,0,5,2.25,5,5V199.635z"/>
+            <path d="M246.545,71.538L131.625,4.175c-1.525-0.894-3.506-1.386-5.578-1.386c-2.072,0-4.053,0.492-5.578,1.386L5.549,71.538C2.386,73.392,0,77.556,0,81.223v160.582c0,4.135,3.364,7.5,7.5,7.5h12.912c4.136,0,7.5-3.365,7.5-7.5V105.917c0-1.378,1.121-2.5,2.5-2.5h191.268c1.379,0,2.5,1.122,2.5,2.5v135.888c0,4.135,3.364,7.5,7.5,7.5h12.913c4.136,0,7.5-3.365,7.5-7.5V81.223C252.094,77.556,249.708,73.392,246.545,71.538z"/>
+          </svg>
+        </div>
+        <span class="nav-tooltip">Garajım</span>
+      </a>
+      
+      <button onclick="openCreatePostModal()" class="nav-link group relative" title="Yeni Gönderi">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-red-600/50">
+          <svg class="w-6 h-6 text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+        </div>
+        <span class="nav-tooltip">Yeni Gönderi</span>
+      </button>
     </div>
+  </nav>
 
-    <h1 class="text-2xl font-bold neon absolute left-1/2 transform -translate-x-1/2">
-      <a href="../index.html">Piyasa Garage</a>
+  <!-- Üst Navbar -->
+  <nav class="sticky top-0 z-40 bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center px-8 py-4 border-b border-red-700 relative" style="margin-left: 96px;">
+    <!-- Ortada - Logo -->
+    <h1 class="text-2xl font-bold neon">
+      <a href="index.html">Piyasa Garage</a>
     </h1>
-
-    <div class="flex items-center space-x-4">
-      <a href="login.html" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-medium">Giriş Yap</a>
+    
+    <!-- Sağ - Arama -->
+    <div class="absolute right-8">
+      <div class="relative">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Kullanıcı ara..." 
+          class="w-64 py-2 pl-10 pr-4 rounded-full bg-neutral-800 border border-gray-600 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 placeholder-gray-400"
+        />
+        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+        </svg>
+        
+        <!-- Arama Sonuçları Dropdown -->
+        <div id="searchResultsContainer" class="hidden absolute top-full left-0 mt-2 w-full bg-black/95 backdrop-blur-md rounded-xl border border-gray-700 shadow-2xl z-50 max-h-96 overflow-y-auto scrollbar-hide">
+          <div class="p-3" id="searchResultsList">
+            <!-- Arama sonuçları buraya eklenecek -->
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
 
   <!-- Etkinlikler -->
-  <section class="max-w-4xl mx-auto mt-10 px-4">
-    <div class="mb-8">
-      <h2 class="text-3xl font-bold text-white mb-2">Yaklaşan Etkinlikler</h2>
-      <p class="text-gray-400">Otomobil buluşmaları, yarışlar ve festivaller</p>
+  <section class="max-w-7xl mx-auto mt-10 px-4 lg:pl-24 relative" style="z-index: 1;">
+    <!-- Admin Panel Butonu (Sadece Admin) -->
+    <div id="adminPanelBtn" class="hidden mb-8 fade-in-up">
+      <button onclick="openAdminPanel()" class="admin-btn px-8 py-4 rounded-xl text-white font-bold flex items-center space-x-3 shadow-2xl">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <span class="text-lg">Yeni Etkinlik Ekle</span>
+      </button>
     </div>
 
-    <div id="eventsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Etkinlikler buraya yüklenecek -->
+    <!-- Liste Görünümü - ÜSTTE -->
+    <div class="mb-16 fade-in-up max-w-5xl">
+      <div class="mb-6">
+        <div class="flex items-center gap-4 mb-2">
+          <div class="h-px flex-1 bg-gradient-to-r from-transparent via-red-600/50 to-red-600/50"></div>
+          <h2 class="text-3xl md:text-4xl font-black text-white whitespace-nowrap">
+            YAKLAŞAN ETKİNLİK
+          </h2>
+          <div class="h-px flex-1 bg-gradient-to-r from-red-600/50 via-red-600/50 to-transparent"></div>
+        </div>
+      </div>
+      <div id="eventsContainer" class="flex flex-col gap-3">
+        <!-- Etkinlikler buraya yüklenecek - Info card tarzı -->
+      </div>
+    </div>
+
+    <!-- Takvim Görünümü - AŞAĞIDA -->
+    <div class="mb-16 fade-in-up">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-3">
+            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Etkinlik Takvimi
+          </h2>
+          <p class="text-gray-400 ml-11">Yaklaşan etkinlikleri takvimde görüntüle</p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button onclick="previousMonth()" class="nav-btn p-3 rounded-xl bg-neutral-800/50 hover:bg-neutral-700 border border-gray-700/50 backdrop-blur-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <button onclick="nextMonth()" class="nav-btn p-3 rounded-xl bg-neutral-800/50 hover:bg-neutral-700 border border-gray-700/50 backdrop-blur-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+          <button onclick="goToToday()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50">
+            Bugün
+          </button>
+        </div>
+      </div>
+      
+      <!-- Takvim Başlığı -->
+      <div id="calendarHeader" class="text-center mb-6">
+        <h3 class="text-3xl font-bold text-white"></h3>
+      </div>
+      
+      <!-- Takvim Grid -->
+      <div class="calendar-container rounded-3xl p-6 md:p-8">
+        <div class="grid grid-cols-7 gap-3 mb-6">
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Pzt</div>
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Sal</div>
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Çar</div>
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Per</div>
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Cum</div>
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Cmt</div>
+          <div class="text-center text-gray-400 font-bold py-3 text-sm uppercase tracking-wider">Paz</div>
+        </div>
+        <div id="calendarGrid" class="grid grid-cols-7 gap-3">
+          <!-- Takvim günleri buraya yüklenecek -->
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- Admin Panel Modal (Etkinlik Ekleme/Düzenleme) -->
+  <div id="adminEventModal" class="hidden fixed inset-0 z-[90] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4" style="z-index: 90;">
+    <div class="bg-neutral-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-white" id="adminModalTitle">Yeni Etkinlik Ekle</h2>
+          <button onclick="closeAdminPanel()" class="p-2 rounded-lg hover:bg-red-600/20 transition">
+            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <form id="adminEventForm" onsubmit="saveEvent(event)" class="space-y-4">
+          <input type="hidden" id="eventId" name="event_id">
+          
+          <div>
+            <label class="block text-white font-medium mb-2">Etkinlik Başlığı *</label>
+            <input type="text" id="eventTitle" name="title" required
+                   class="w-full px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-600">
+          </div>
+          
+          <div>
+            <label class="block text-white font-medium mb-2">Açıklama</label>
+            <textarea id="eventDescription" name="description" rows="4"
+                      class="w-full px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-600"></textarea>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-white font-medium mb-2">Tarih *</label>
+              <input type="date" id="eventDate" name="event_date" required
+                     class="w-full px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-600">
+            </div>
+            <div>
+              <label class="block text-white font-medium mb-2">Saat</label>
+              <input type="time" id="eventTime" name="event_time"
+                     class="w-full px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-600">
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-white font-medium mb-2">Konum</label>
+            <input type="text" id="eventLocation" name="location"
+                   class="w-full px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-600">
+          </div>
+          
+          <div>
+            <label class="block text-white font-medium mb-2">Poster Görseli</label>
+            <input type="file" id="eventPoster" name="poster_image" accept="image/jpeg,image/jpg,image/png,image/webp"
+                   class="w-full px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-600">
+            <p class="text-gray-400 text-sm mt-1">JPG, PNG veya WebP formatında, maksimum 5MB</p>
+            <div id="posterPreview" class="mt-4 hidden">
+              <img id="posterPreviewImg" src="" alt="Poster önizleme" class="max-w-full h-48 object-cover rounded-lg">
+            </div>
+            <input type="hidden" id="eventImageUrl" name="image_url">
+          </div>
+          
+          <div class="flex space-x-4 pt-4">
+            <button type="submit" class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition">
+              Kaydet
+            </button>
+            <button type="button" onclick="closeAdminPanel()" class="flex-1 px-6 py-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-white font-semibold transition">
+              İptal
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Etkinlik Detay Modalı -->
+  <div id="eventDetailModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4" style="z-index: 80;">
+    <div class="bg-neutral-900 rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto border border-gray-700">
+      <div class="relative">
+        <button onclick="closeEventModal()" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-black/50 hover:bg-black/70 transition">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        <div id="eventDetailContent">
+          <!-- Etkinlik detayları buraya yüklenecek -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/touch-events.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/search.js"></script>
   <script src="js/events.js"></script>
 </body>
 </html>

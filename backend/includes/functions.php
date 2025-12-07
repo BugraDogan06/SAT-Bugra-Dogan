@@ -50,3 +50,27 @@ function formatDate($date) {
     return date('d.m.Y', $timestamp);
 }
 
+function isAdmin() {
+    if (!isLoggedIn()) {
+        return false;
+    }
+    
+    global $db;
+    if (!isset($db)) {
+        $db = getDB();
+    }
+    
+    $user_id = getCurrentUserId();
+    $stmt = $db->prepare("SELECT is_admin FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    return $user && $user['is_admin'] == 1;
+}
+
+function checkAdmin() {
+    if (!isAdmin()) {
+        jsonResponse(['success' => false, 'message' => 'Bu işlem için yönetici yetkisi gereklidir'], 403);
+    }
+}
+

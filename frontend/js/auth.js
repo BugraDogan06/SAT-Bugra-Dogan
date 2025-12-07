@@ -1,5 +1,7 @@
-// API Base URL
-const API_BASE = '../backend/api';
+// API Base URL (global değişken, sadece bir kez tanımla)
+if (typeof API_BASE === 'undefined') {
+    var API_BASE = '../backend/api';
+}
 
 // Form gönderimlerini handle et
 document.addEventListener('DOMContentLoaded', function() {
@@ -28,13 +30,15 @@ async function handleLogin(e) {
     try {
         const response = await fetch(`${API_BASE}/auth.php`, {
             method: 'POST',
+            credentials: 'include', // Cookie'leri dahil et
             body: formData
         });
         
         const data = await response.json();
         
         if (data.success) {
-            window.location.href = 'index.html';
+            // Giriş başarılı, keşfet sayfasına yönlendir
+            window.location.replace('index.html');
         } else {
             errorDiv.textContent = data.message || 'Giriş başarısız';
             errorDiv.classList.remove('hidden');
@@ -59,13 +63,18 @@ async function handleRegister(e) {
     try {
         const response = await fetch(`${API_BASE}/auth.php`, {
             method: 'POST',
+            credentials: 'include', // Cookie'leri dahil et
             body: formData
         });
         
         const data = await response.json();
         
         if (data.success) {
-            window.location.href = 'index.html';
+            // Kayıt başarılı, kısa bir bekleme sonrası keşfet sayfasına yönlendir (session'ın kaydedilmesi için)
+            console.log('Kayıt başarılı, session:', data.session_id);
+            setTimeout(() => {
+                window.location.replace('index.html');
+            }, 300);
         } else {
             errorDiv.textContent = data.message || 'Kayıt başarısız';
             errorDiv.classList.remove('hidden');

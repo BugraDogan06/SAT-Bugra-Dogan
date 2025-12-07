@@ -8,10 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background-color: #180000;
       color: #f1f1f1;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      min-height: 100vh;
+      width: 100%;
     }
     .neon {
       font-family: 'Orbitron', sans-serif;
@@ -74,7 +77,24 @@
     </div>
   </div>
 
+  <script src="js/session.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    // Sayfa yüklendiğinde session kontrolü yap
+    document.addEventListener('DOMContentLoaded', async function() {
+      try {
+        const response = await fetch('../backend/api/auth.php');
+        const data = await response.json();
+        
+        // Eğer zaten giriş yapılmışsa keşfet sayfasına yönlendir
+        if (data.success) {
+          window.location.href = 'index.html';
+        }
+      } catch (error) {
+        console.error('Session kontrolü hatası:', error);
+      }
+    });
+  </script>
 </body>
 </html>
 
