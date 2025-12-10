@@ -1,6 +1,6 @@
 <img width="1920" height="938" alt="Piyasa Garage - Google Chrome 10 12 2025 06_26_48" src="https://github.com/user-attachments/assets/437a757b-13cd-4149-a7a7-55c353fb0036" />
 
-# 🚗 Piyasa Garage
+P İ Y A S A   G A R A G E 
 
 
 <div align="center">
@@ -291,9 +291,11 @@ Yaklaşan ve geçmiş etkinlikler, katılım sistemi
 
 ### Mesajlaşma ve Bildirimler
 Gerçek zamanlı direkt mesajlaşma, konuşma listesi
+
 <img width="490" height="941" alt="Piyasa Garage - Google Chrome 10 12 2025 06_41_24" src="https://github.com/user-attachments/assets/4be20eae-1e5e-4f2d-a3d3-2ac2cc304f11" />
 
 Anlık bildirimler (beğeni,yorum ve takip)
+
 <img width="485" height="940" alt="Piyasa Garage - Google Chrome 10 12 2025 06_40_19" src="https://github.com/user-attachments/assets/93ba3f99-6c8e-40eb-9258-31f2320167a1" />
 
 
@@ -354,6 +356,7 @@ Sorularınız veya sorunlarınız için:
 Made with ❤️ by BUĞRA DOĞAN
 
 </div>
+
 
 
 
