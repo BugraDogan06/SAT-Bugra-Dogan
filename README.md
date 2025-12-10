@@ -1,8 +1,5 @@
 <img width="1920" height="938" alt="Piyasa Garage - Google Chrome 10 12 2025 06_26_48" src="https://github.com/user-attachments/assets/437a757b-13cd-4149-a7a7-55c353fb0036" />
 
-P İ Y A S A   G A R A G E 
-
-
 <div align="center">
 
 ![Piyasa Garage Logo](https://img.shields.io/badge/Piyasa-Garage-red?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)
@@ -356,6 +353,7 @@ Sorularınız veya sorunlarınız için:
 Made with ❤️ by BUĞRA DOĞAN
 
 </div>
+
 
 
 
