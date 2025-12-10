@@ -53,7 +53,103 @@ async function handleLogout() {
     }
 }
 
-// Global fonksiyon olarak export et
+// Gönderi düzenleme fonksiyonu
+async function editPostFromProfile(postId) {
+    try {
+        // Gönderi bilgilerini getir
+        const response = await fetch(`${API_BASE}/posts.php?user_id=${currentProfileUserId}`, {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (!data.success || !data.posts) {
+            alert('Gönderi bulunamadı');
+            return;
+        }
+        
+        const post = data.posts.find(p => p.id === postId);
+        if (!post) {
+            alert('Gönderi bulunamadı');
+            return;
+        }
+        
+        // Universal modal'ı aç ve formu doldur
+        if (typeof openUniversalModal === 'function') {
+            openUniversalModal('post');
+            
+            // Form alanlarını doldur
+            const postIdInput = document.getElementById('postId');
+            const postTitle = document.getElementById('postTitle');
+            const postDescription = document.getElementById('postDescription');
+            const postCarBrand = document.getElementById('postCarBrand');
+            const postCarModel = document.getElementById('postCarModel');
+            const postSubmitText = document.getElementById('postSubmitText');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+            const fileSelectButton = document.getElementById('fileSelectButton');
+            
+            if (postIdInput) postIdInput.value = post.id;
+            if (postTitle) postTitle.value = post.title || '';
+            if (postDescription) postDescription.value = post.description || '';
+            if (postCarBrand) postCarBrand.value = post.car_brand || '';
+            if (postCarModel) postCarModel.value = post.car_model || '';
+            if (postSubmitText) postSubmitText.textContent = '💾 Güncelle';
+            
+            // Mevcut görseli göster
+            if (imagePreview && imagePreviewContainer && post.image_url) {
+                const imagePath = post.image_url.startsWith('http') ? post.image_url : '../' + post.image_url;
+                imagePreview.src = imagePath;
+                imagePreviewContainer.classList.remove('hidden');
+                if (fileSelectButton) fileSelectButton.classList.add('hidden');
+            }
+        }
+    } catch (error) {
+        console.error('Gönderi bilgisi alınırken hata:', error);
+        alert('Gönderi bilgisi alınamadı');
+    }
+}
+
+// Gönderi silme fonksiyonu
+async function deletePostFromProfile(postId) {
+    if (!confirm('Bu gönderiyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/posts.php?id=${postId}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Gönderileri yeniden yükle
+            if (currentProfileUserId) {
+                loadUserPosts(currentProfileUserId);
+            } else {
+                // Auth kontrolü yap ve profili yeniden yükle
+                const authResponse = await fetch(`${API_BASE}/auth.php`, { credentials: 'include' });
+                const authData = await authResponse.json();
+                if (authData.success && authData.user) {
+                    loadUserPosts(authData.user.id);
+                }
+            }
+            
+            // Bildirim göster
+            alert('✅ Gönderi başarıyla silindi');
+        } else {
+            alert('❌ ' + (data.message || 'Gönderi silinemedi'));
+        }
+    } catch (error) {
+        console.error('Gönderi silme hatası:', error);
+        alert('❌ Gönderi silinirken bir hata oluştu');
+    }
+}
+
+// Global fonksiyonlar
+window.editPostFromProfile = editPostFromProfile;
+window.deletePostFromProfile = deletePostFromProfile;
 window.handleLogout = handleLogout;
 
 // Profil bilgilerini yükle
@@ -180,19 +276,26 @@ function displayUserProfile(user, isOwnProfile = true) {
     
     // Buton görünürlüğünü ayarla
     if (isOwnProfile) {
-        // Kendi profili - Gönderi Ekle, Profil Düzenle ve Çıkış Yap butonlarını göster
+        // Kendi profili - Profil Düzenle, Araç Ekle ve Çıkış Yap butonlarını göster
         if (createPostBtn) {
             createPostBtn.classList.remove('hidden');
         }
         if (editProfileBtn) {
             editProfileBtn.classList.remove('hidden');
         }
-        if (logoutBtn) {
-            logoutBtn.classList.remove('hidden');
+        
+        // Çıkış Yap butonu - önemli olduğu için ID ile al
+        const logoutButton = document.getElementById('logoutBtn');
+        if (logoutButton) {
+            logoutButton.classList.remove('hidden');
         }
+        
         // Araba ekle butonunu göster
         const addCarBtn = document.getElementById('addCarBtn');
+        const addFirstCarBtn = document.getElementById('addFirstCarBtn');
         if (addCarBtn) addCarBtn.classList.remove('hidden');
+        if (addFirstCarBtn) addFirstCarBtn.classList.remove('hidden');
+        
         // Takip butonunu ve Mesaj Gönder butonunu gizle
         if (followButtonContainer) {
             followButtonContainer.classList.add('hidden');
@@ -200,20 +303,32 @@ function displayUserProfile(user, isOwnProfile = true) {
         if (sendMessageBtn) {
             sendMessageBtn.classList.add('hidden');
         }
+        
+        // cars.js'e isOwnProfile bilgisini aktar
+        if (typeof window.updateCarOwnershipStatus === 'function') {
+            window.updateCarOwnershipStatus(true);
+        }
     } else {
-        // Diğer kullanıcının profili - Takip butonunu göster
+        // Diğer kullanıcının profili - Takip ve Mesaj butonlarını göster
         if (createPostBtn) {
             createPostBtn.classList.add('hidden');
         }
         if (editProfileBtn) {
             editProfileBtn.classList.add('hidden');
         }
-        if (logoutBtn) {
-            logoutBtn.classList.add('hidden');
+        
+        // Çıkış Yap butonunu gizle
+        const logoutButton = document.getElementById('logoutBtn');
+        if (logoutButton) {
+            logoutButton.classList.add('hidden');
         }
+        
         // Araba ekle butonunu gizle
         const addCarBtn = document.getElementById('addCarBtn');
+        const addFirstCarBtn = document.getElementById('addFirstCarBtn');
         if (addCarBtn) addCarBtn.classList.add('hidden');
+        if (addFirstCarBtn) addFirstCarBtn.classList.add('hidden');
+        
         // Takip butonunu ve Mesaj Gönder butonunu göster
         if (followButtonContainer && followButton) {
             followButtonContainer.classList.remove('hidden');
@@ -231,6 +346,11 @@ function displayUserProfile(user, isOwnProfile = true) {
         // Mesaj Gönder butonunu göster
         if (sendMessageBtn) {
             sendMessageBtn.classList.remove('hidden');
+        }
+        
+        // cars.js'e isOwnProfile bilgisini aktar
+        if (typeof window.updateCarOwnershipStatus === 'function') {
+            window.updateCarOwnershipStatus(false);
         }
     }
 }
@@ -528,7 +648,9 @@ async function displayUserPosts(posts) {
             : `handleImageClick('${mediaPath}', '${escapeHtml(post.username || '')}', '${escapeHtml(post.title || '')}')`;
         
         return `
-        <div class="instagram-grid-item relative group" onclick="${onClickHandler}">
+        <div class="instagram-grid-item relative group">
+            <!-- Medya (Tıklanabilir) -->
+            <div class="w-full h-full cursor-pointer" onclick="${onClickHandler}">
             ${mediaType === 'video' ? `
             <video 
                 src="${mediaPath}" 
@@ -551,7 +673,9 @@ async function displayUserPosts(posts) {
                  class="w-full h-full object-cover" 
                  alt="${escapeHtml(post.title || 'Gönderi')}" />
             `}
-            <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition bg-black/40">
+                
+                <!-- İstatistikler Overlay -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition bg-black/50">
                 <div class="flex items-center gap-6 text-white font-semibold">
                     <span class="flex items-center gap-1">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -567,15 +691,129 @@ async function displayUserPosts(posts) {
                     </span>
                 </div>
             </div>
+            </div>
+            
+            <!-- Düzenle/Sil Butonları (Sadece kendi gönderileri için) -->
+            ${isOwnPosts ? `
+            <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition z-10">
+                <button 
+                    onclick="event.stopPropagation(); editPostFromProfile(${post.id})"
+                    class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition transform hover:scale-110"
+                    title="Düzenle"
+                >
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </button>
+                <button 
+                    onclick="event.stopPropagation(); deletePostFromProfile(${post.id})"
+                    class="p-2 bg-red-600 hover:bg-red-700 rounded-lg shadow-lg transition transform hover:scale-110"
+                    title="Sil"
+                >
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </div>
+            ` : ''}
         </div>
         `;
     }).filter(html => html !== '').join('');
 }
 
 // Profil düzenleme modalını aç
-function openEditProfileModal() {
-    if (typeof openUniversalModal === 'function') {
-        openUniversalModal('profile');
+async function openEditProfileModal() {
+    const modal = document.getElementById('universalModal');
+    if (!modal) {
+        console.error('universalModal element not found');
+        return;
+    }
+    
+    // Kullanıcı bilgilerini al
+    try {
+        const response = await fetch(`${API_BASE}/auth.php`, {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+            const user = data.user;
+            const profilePicPath = user.profile_picture ? '../' + user.profile_picture : '';
+            
+            // Modal içeriğini oluştur
+            modal.innerHTML = `
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-gray-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-red-600/30 shadow-2xl">
+                        <!-- Header -->
+                        <div class="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4 flex items-center justify-between z-10">
+                            <h2 class="text-2xl font-bold text-white">Profili Düzenle</h2>
+                            <button onclick="closeEditProfileModal()" class="text-gray-400 hover:text-white transition">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Body -->
+                        <div class="p-6">
+                            <form id="editProfileForm" onsubmit="event.preventDefault(); updateProfile();" class="space-y-6">
+                                <!-- Profil Fotoğrafı -->
+                                <div class="flex flex-col items-center">
+                                    <img id="profilePicturePreview" 
+                                         src="${profilePicPath || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Crect width=\'150\' height=\'150\' fill=\'%23333\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\' font-size=\'60\'%3E%3F%3C/text%3E%3C/svg%3E'}" 
+                                         alt="Profil" 
+                                         class="w-32 h-32 rounded-full object-cover mb-4 border-4 border-red-600">
+                                    <label class="cursor-pointer px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white text-sm font-semibold transition">
+                                        Fotoğraf Değiştir
+                                        <input type="file" name="profile_picture" accept="image/*" onchange="previewProfilePicture(this)" class="hidden">
+                                    </label>
+                                </div>
+                                
+                                <!-- Ad Soyad -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Ad Soyad</label>
+                                    <input 
+                                        type="text" 
+                                        id="editFullName" 
+                                        name="full_name" 
+                                        value="${escapeHtml(user.full_name || '')}"
+                                        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-500" 
+                                        placeholder="Ad Soyad">
+                                </div>
+                                
+                                <!-- Biyografi -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-300 mb-2">Biyografi</label>
+                                    <textarea 
+                                        id="editBio" 
+                                        name="bio" 
+                                        rows="4" 
+                                        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-red-500 resize-none" 
+                                        placeholder="Kendiniz hakkında birkaç şey yazın...">${escapeHtml(user.bio || '')}</textarea>
+                                </div>
+                                
+                                <!-- Hata Mesajı -->
+                                <div id="editProfileError" class="hidden bg-red-900/50 border border-red-600 text-red-200 px-4 py-3 rounded-lg"></div>
+                                
+                                <!-- Kaydet Butonu -->
+                                <button 
+                                    type="submit" 
+                                    class="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-lg text-white font-bold transition shadow-lg">
+                                    💾 Değişiklikleri Kaydet
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Modal'ı göster
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    } catch (error) {
+        console.error('Kullanıcı bilgileri alınamadı:', error);
+        alert('Profil bilgileri yüklenirken bir hata oluştu');
     }
 }
 
@@ -609,8 +847,11 @@ async function loadEditProfileForm() {
 
 // Profil düzenleme modalını kapat
 function closeEditProfileModal() {
-    if (typeof closeUniversalModal === 'function') {
-        closeUniversalModal();
+    const modal = document.getElementById('universalModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.innerHTML = '';
+        document.body.style.overflow = '';
     }
 }
 

@@ -36,18 +36,33 @@ switch ($method) {
         
         // İstatistikler isteniyorsa
         if ($stats_request) {
-            $totalPosts = $db->query("SELECT COUNT(*) as count FROM posts")->fetch(PDO::FETCH_ASSOC)['count'];
+            try {
+                // Sadece onaylı gönderileri say
+                $totalPosts = $db->query("SELECT COUNT(*) as count FROM posts WHERE is_approved = 1")->fetch(PDO::FETCH_ASSOC)['count'];
             $totalUsers = $db->query("SELECT COUNT(*) as count FROM users")->fetch(PDO::FETCH_ASSOC)['count'];
             $totalLikes = $db->query("SELECT COUNT(*) as count FROM likes")->fetch(PDO::FETCH_ASSOC)['count'];
+                
+                // Bugünkü istatistikler
+                $todayPosts = $db->query("SELECT COUNT(*) as count FROM posts WHERE DATE(created_at) = CURDATE() AND is_approved = 1")->fetch(PDO::FETCH_ASSOC)['count'];
+                $totalEvents = $db->query("SELECT COUNT(*) as count FROM events WHERE event_date >= NOW()")->fetch(PDO::FETCH_ASSOC)['count'];
             
             jsonResponse([
                 'success' => true,
                 'stats' => [
                     'total_posts' => intval($totalPosts),
                     'total_users' => intval($totalUsers),
-                    'total_likes' => intval($totalLikes)
+                        'total_likes' => intval($totalLikes),
+                        'today_posts' => intval($todayPosts),
+                        'total_events' => intval($totalEvents)
                 ]
             ]);
+            } catch (Exception $e) {
+                error_log('Stats error: ' . $e->getMessage());
+                jsonResponse([
+                    'success' => false,
+                    'message' => 'İstatistikler alınamadı: ' . $e->getMessage()
+                ], 500);
+            }
             break;
         }
         
@@ -61,7 +76,7 @@ switch ($method) {
                            CASE WHEN EXISTS(SELECT 1 FROM likes WHERE post_id = p.id AND user_id = ?) THEN 1 ELSE 0 END as is_liked
                     FROM posts p
                     JOIN users u ON p.user_id = u.id
-                    WHERE p.user_id = ?
+                    WHERE p.user_id = ? AND p.is_approved = 1
                     ORDER BY p.created_at DESC
                     LIMIT 50
                 ");
@@ -74,14 +89,14 @@ switch ($method) {
                            0 as is_liked
                     FROM posts p
                     JOIN users u ON p.user_id = u.id
-                    WHERE p.user_id = ?
+                    WHERE p.user_id = ? AND p.is_approved = 1
                     ORDER BY p.created_at DESC
                     LIMIT 50
                 ");
                 $stmt->execute([$requested_user_id]);
             }
         } else {
-            // user_id yoksa tüm gönderileri getir (keşfet sayfası için)
+            // user_id yoksa tüm gönderileri getir (keşfet sayfası için) - SADECE ONAYLANMIŞ
             if ($current_user_id) {
                 $stmt = $db->prepare("
                     SELECT p.*, u.username, u.profile_picture,
@@ -90,12 +105,13 @@ switch ($method) {
                            CASE WHEN EXISTS(SELECT 1 FROM likes WHERE post_id = p.id AND user_id = ?) THEN 1 ELSE 0 END as is_liked
                     FROM posts p
                     JOIN users u ON p.user_id = u.id
+                    WHERE p.is_approved = 1
                     ORDER BY p.created_at DESC
                     LIMIT 50
                 ");
                 $stmt->execute([$current_user_id]);
             } else {
-                // Giriş yapılmamışsa sadece gönderileri getir
+                // Giriş yapılmamışsa sadece gönderileri getir - SADECE ONAYLANMIŞ
                 $stmt = $db->query("
                     SELECT p.*, u.username, u.profile_picture,
                            (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as like_count,
@@ -103,6 +119,7 @@ switch ($method) {
                            0 as is_liked
                     FROM posts p
                     JOIN users u ON p.user_id = u.id
+                    WHERE p.is_approved = 1
                     ORDER BY p.created_at DESC
                     LIMIT 50
                 ");
@@ -313,16 +330,17 @@ switch ($method) {
             }
             
             $stmt = $db->prepare("
-                INSERT INTO posts (user_id, title, description, image_url, video_url, media_type, car_model, car_brand)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO posts (user_id, title, description, image_url, video_url, media_type, car_model, car_brand, is_approved)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
             ");
             
             if ($stmt->execute([$user_id, $title, $description, $image_url, $video_url, $media_type, $car_model, $car_brand])) {
                 ob_clean();
                 jsonResponse([
                     'success' => true,
-                    'message' => 'Gönderi oluşturuldu',
-                    'post_id' => $db->lastInsertId()
+                    'message' => 'Gönderi oluşturuldu ve admin onayı bekleniyor',
+                    'post_id' => $db->lastInsertId(),
+                    'pending_approval' => true
                 ]);
             } else {
                 ob_clean();

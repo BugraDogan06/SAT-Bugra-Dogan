@@ -10,15 +10,72 @@ $db = getDB();
 switch ($method) {
     case 'GET':
         // Tüm etkinlikleri getir (herkes görebilir)
-        $stmt = $db->query("
-            SELECT e.*, u.username,
-                   (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id) as participant_count
-            FROM events e
-            JOIN users u ON e.user_id = u.id
-            WHERE e.event_date >= NOW()
-            ORDER BY e.event_date ASC
-            LIMIT 50
-        ");
+        // Şehir filtresi varsa uygula
+        $city = isset($_GET['city']) ? sanitize($_GET['city']) : '';
+        $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 50;
+        $upcoming = isset($_GET['upcoming']) && $_GET['upcoming'] == '1';
+        
+        // Kullanıcı giriş yapmışsa katılım durumunu da getir
+        $currentUserId = getCurrentUserId();
+        
+        if ($city) {
+            // Şehir filtrelemesi ile
+            if ($currentUserId) {
+                $stmt = $db->prepare("
+                    SELECT e.*, u.username,
+                           (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id) as participant_count,
+                           (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id AND user_id = ?) as is_registered
+                    FROM events e
+                    JOIN users u ON e.user_id = u.id
+                    WHERE e.event_date >= NOW()
+                    AND e.location LIKE ?
+                    ORDER BY e.event_date ASC
+                    LIMIT ?
+                ");
+                $stmt->execute([$currentUserId, '%' . $city . '%', $limit]);
+            } else {
+                $stmt = $db->prepare("
+                    SELECT e.*, u.username,
+                           (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id) as participant_count,
+                           0 as is_registered
+                    FROM events e
+                    JOIN users u ON e.user_id = u.id
+                    WHERE e.event_date >= NOW()
+                    AND e.location LIKE ?
+                    ORDER BY e.event_date ASC
+                    LIMIT ?
+                ");
+                $stmt->execute(['%' . $city . '%', $limit]);
+            }
+        } else {
+            // Tüm etkinlikler
+            if ($currentUserId) {
+                $stmt = $db->prepare("
+                    SELECT e.*, u.username,
+                           (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id) as participant_count,
+                           (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id AND user_id = ?) as is_registered
+                    FROM events e
+                    JOIN users u ON e.user_id = u.id
+                    WHERE e.event_date >= NOW()
+                    ORDER BY e.event_date ASC
+                    LIMIT ?
+                ");
+                $stmt->execute([$currentUserId, $limit]);
+            } else {
+                $stmt = $db->prepare("
+                    SELECT e.*, u.username,
+                           (SELECT COUNT(*) FROM event_participants WHERE event_id = e.id) as participant_count,
+                           0 as is_registered
+                    FROM events e
+                    JOIN users u ON e.user_id = u.id
+                    WHERE e.event_date >= NOW()
+                    ORDER BY e.event_date ASC
+                    LIMIT ?
+                ");
+                $stmt->execute([$limit]);
+            }
+        }
+        
         $events = $stmt->fetchAll();
         
         jsonResponse([
@@ -28,11 +85,54 @@ switch ($method) {
         break;
         
     case 'POST':
-        // Yeni etkinlik oluştur - SADECE ADMIN
+        // Etkinliğe katıl (action=join) veya Yeni etkinlik oluştur
         if (!isLoggedIn()) {
             jsonResponse(['success' => false, 'message' => 'Giriş yapmalısınız'], 401);
         }
         
+        // Etkinliğe katılma işlemi
+        if (isset($_GET['action']) && $_GET['action'] === 'join') {
+            $event_id = intval($_POST['event_id'] ?? 0);
+            
+            if (!$event_id) {
+                jsonResponse(['success' => false, 'message' => 'Etkinlik ID gereklidir'], 400);
+            }
+            
+            // Etkinlik var mı kontrol et
+            $stmt = $db->prepare("SELECT id FROM events WHERE id = ?");
+            $stmt->execute([$event_id]);
+            if (!$stmt->fetch()) {
+                jsonResponse(['success' => false, 'message' => 'Etkinlik bulunamadı'], 404);
+            }
+            
+            // Kullanıcı zaten katılmış mı?
+            $stmt = $db->prepare("SELECT id FROM event_participants WHERE event_id = ? AND user_id = ?");
+            $stmt->execute([$event_id, getCurrentUserId()]);
+            if ($stmt->fetch()) {
+                jsonResponse(['success' => false, 'message' => 'Bu etkinliğe zaten katıldınız'], 400);
+            }
+            
+            // Katılımcıyı ekle
+            $stmt = $db->prepare("INSERT INTO event_participants (event_id, user_id, registered_at) VALUES (?, ?, NOW())");
+            
+            if ($stmt->execute([$event_id, getCurrentUserId()])) {
+                // Yeni katılımcı sayısını al
+                $stmt = $db->prepare("SELECT COUNT(*) as count FROM event_participants WHERE event_id = ?");
+                $stmt->execute([$event_id]);
+                $result = $stmt->fetch();
+                
+                jsonResponse([
+                    'success' => true,
+                    'message' => 'Etkinliğe başarıyla katıldınız!',
+                    'participant_count' => $result['count']
+                ]);
+            } else {
+                jsonResponse(['success' => false, 'message' => 'Katılım sırasında hata oluştu'], 500);
+            }
+            break;
+        }
+        
+        // Yeni etkinlik oluştur - SADECE ADMIN
         checkAdmin(); // Admin kontrolü
         
         // FormData ile dosya yükleme
@@ -59,7 +159,7 @@ switch ($method) {
             $filePath = $uploadDir . $fileName;
             
             if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                $image_url = 'images/events/' . $fileName;
+                $image_url = 'frontend/images/events/' . $fileName;
             } else {
                 jsonResponse(['success' => false, 'message' => 'Dosya yüklenemedi'], 500);
             }

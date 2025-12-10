@@ -1,8 +1,4 @@
-/* ============================================
-   RESPONSIVE & CROSS-BROWSER COMPATIBILITY
-   ============================================ */
 
-/* Viewport Fix for iOS Safari */
 @supports (-webkit-touch-callout: none) {
   html {
     -webkit-text-size-adjust: 100%;
@@ -10,7 +6,6 @@
   }
 }
 
-/* Cross-Browser Animations */
 @-webkit-keyframes heroGlow {
   0%, 100% { opacity: 0.45; }
   50% { opacity: 0.75; }
@@ -24,9 +19,7 @@
   50% { opacity: 0.75; }
 }
 
-/* Touch Device Optimizations */
 @media (hover: none) and (pointer: coarse) {
-  /* Touch devices */
   .post-card:hover {
     transform: none;
     box-shadow: none;
@@ -41,7 +34,6 @@
     transform: none;
   }
   
-  /* Larger touch targets */
   button,
   .btn,
   .nav-link,
@@ -51,11 +43,104 @@
   }
 }
 
-/* Mobile First - Base Styles */
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+/* Mobil Sidebar Stilleri */
+#leftSidebarNav {
+  transition: transform 0.3s ease-in-out;
+}
+
+#leftSidebarNav.mobile-sidebar-open {
+  transform: translateX(0) !important;
+}
+
+#mobileSidebarOverlay {
+  transition: opacity 0.3s ease-in-out;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 75 !important;
+}
+
+/* Desktop Navbar - Mobilde Kesinlikle Gizle */
+@media (max-width: 1023px) {
+  /* Desktop navbar'ı mobilde kesinlikle gizle */
+  #desktopTopNavbar,
+  nav#desktopTopNavbar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    position: absolute !important;
+    top: -9999px !important;
+  }
+  
+  /* Mobil navbar'ı göster */
+  #mobileTopNavbar,
+  nav#mobileTopNavbar {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  #leftSidebarNav {
+    display: flex !important;
+  }
+  
+  #leftSidebarNav.hidden {
+    display: flex !important;
+  }
+  
+  #leftSidebarNav.-translate-x-full {
+    transform: translateX(-100%) !important;
+    -webkit-transform: translateX(-100%) !important;
+  }
+  
+  #leftSidebarNav.mobile-sidebar-open {
+    transform: translateX(0) !important;
+    -webkit-transform: translateX(0) !important;
+    z-index: 80 !important;
+    display: flex !important;
+  }
+  
+  #mobileSidebarOverlay:not(.hidden) {
+    display: block !important;
+    z-index: 75 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Mobil navbar'ı desktop'ta kesinlikle gizle */
+  #mobileTopNavbar,
+  nav#mobileTopNavbar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+  }
+  
+  /* Desktop navbar'ı göster */
+  #desktopTopNavbar,
+  nav#desktopTopNavbar {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  #leftSidebarNav {
+    transform: translateX(0) !important;
+    -webkit-transform: translateX(0) !important;
+  }
 }
 
 html {
@@ -75,21 +160,18 @@ body {
   position: relative;
 }
 
-/* Image Responsive */
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* Responsive Images */
 .responsive-img {
   width: 100%;
   height: auto;
   object-fit: cover;
 }
 
-/* Flexbox Fallback */
 .flex {
   display: -webkit-box;
   display: -webkit-flex;
@@ -97,13 +179,11 @@ img {
   display: flex;
 }
 
-/* Grid Fallback */
 .grid {
   display: -ms-grid;
   display: grid;
 }
 
-/* Smooth Scrolling with Fallback */
 html {
   scroll-behavior: smooth;
 }
@@ -114,7 +194,6 @@ html {
   }
 }
 
-/* Backdrop Filter Fallback */
 .backdrop-blur {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -127,7 +206,6 @@ html {
   }
 }
 
-/* Transform with Prefixes */
 .transform {
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
@@ -135,7 +213,6 @@ html {
   transform: translateZ(0);
 }
 
-/* Transition with Prefixes */
 .transition {
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
@@ -143,7 +220,6 @@ html {
   transition: all 0.3s ease;
 }
 
-/* Animation with Prefixes */
 @-webkit-keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -156,83 +232,232 @@ html {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
-/* Media Queries - Mobile (320px - 640px) */
+                            
+/* ===== MOBILE (< 640px) ===== */
 @media screen and (max-width: 640px) {
-  /* Hide desktop elements */
   .desktop-only {
     display: none !important;
   }
   
-  /* Show mobile elements */
   .mobile-only {
     display: block !important;
   }
   
-  /* Font sizes */
+  /* Mobil Sidebar - Slide-in from left */
+  #leftSidebarNav {
+    display: flex !important;
+    z-index: 70 !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  #leftSidebarNav:not(.-translate-x-full) {
+    transform: translateX(0) !important;
+  }
+  
+  #mobileSidebarOverlay {
+    z-index: 60;
+  }
+  
+  /* Typography */
   h1 { font-size: 1.75rem; }
   h2 { font-size: 1.5rem; }
   h3 { font-size: 1.25rem; }
   
-  /* Padding adjustments */
+  /* Container */
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
   
-  /* Navbar mobile */
+  /* Sidebar'ları gizle */
   #leftSidebarNav {
     display: none !important;
   }
   
-  /* Post cards */
+  .fixed.right-0.w-96 {
+    display: none !important;
+  }
+  
+  /* Main content margin'lerini kaldır */
+  #mainContent {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  nav.sticky {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  section.mt-10 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Post Card */
   .post-card {
     margin-bottom: 1rem;
+    border-radius: 1rem;
   }
   
   /* Buttons */
-  button,
+  button:not(.nav-btn):not(.p-2):not(.p-3),
   .btn {
     width: 100%;
     padding: 0.75rem 1rem;
     font-size: 1rem;
   }
   
-  /* Modals */
-  .modal-content {
-    width: 95%;
-    max-width: 95%;
-    margin: 1rem auto;
+  /* Modal */
+  .modal-content,
+  #universalModal > div,
+  #createPostModal > div,
+  #editPostModal > div,
+  #commentsModal > div,
+  #eventDetailModal > div,
+  #adminEventModal > div {
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 0.5rem !important;
     padding: 1rem;
+    max-height: 95vh !important;
   }
   
-  /* Forms */
+  /* Form Elements */
   input,
   textarea,
   select {
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px !important;
     width: 100%;
+  }
+  
+  /* Grid */
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  /* Garaj Kepengi - Mobile */
+  .garage-door-overlay::after {
+    font-size: 2rem !important;
+    top: 35% !important;
+  }
+  
+  .garage-open-button {
+    font-size: 1rem !important;
+    padding: 12px 32px !important;
+    top: 55% !important;
+  }
+  
+  /* Background Animasyonları - Küçült */
+  .animated-bg-glow,
+  .animated-bg-glow-2 {
+    width: 400px !important;
+    height: 400px !important;
+  }
+  
+  .car-silhouette {
+    width: 400px !important;
+    height: 200px !important;
+  }
+  
+  /* Etkinlikler */
+  .calendar-container {
+    padding: 1rem !important;
+  }
+  
+  /* Profile */
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  /* Instagram Grid */
+  .instagram-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.25rem !important;
   }
 }
 
-/* Media Queries - Tablet (641px - 1024px) */
+/* ===== TABLET (641px - 1024px) ===== */
 @media screen and (min-width: 641px) and (max-width: 1024px) {
+  /* Container */
   .container {
     padding-left: 2rem;
     padding-right: 2rem;
   }
   
+  /* Sidebar - Daralt */
   #leftSidebarNav {
-    width: 80px;
+    width: 80px !important;
   }
   
+  #leftSidebarNav .text-2xl {
+    font-size: 1rem;
+  }
+  
+  #leftSidebarNav span {
+    display: none;
+  }
+  
+  /* Sağ Sidebar - Daralt veya Gizle */
+  .fixed.right-0.w-96 {
+    width: 320px !important;
+    font-size: 0.875rem;
+  }
+  
+  /* Main Content Margin - Ayarla */
+  #mainContent {
+    margin-left: 80px !important;
+    margin-right: 320px !important;
+  }
+  
+  nav.sticky {
+    margin-left: 80px !important;
+    margin-right: 320px !important;
+  }
+  
+  section.mt-10 {
+    margin-left: 80px !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Post Card */
   .post-card {
     max-width: 600px;
     margin: 0 auto 1.5rem;
   }
+  
+  /* Modal */
+  .modal-content,
+  #universalModal > div,
+  #createPostModal > div,
+  #editPostModal > div {
+    width: 90%;
+    max-width: 90%;
+  }
+  
+  /* Grid */
+  .grid-cols-4 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  
+  /* Etkinlikler */
+  .calendar-container {
+    padding: 1.5rem;
+  }
+  
+  /* Garaj Kepengi */
+  .garage-door-overlay::after {
+    font-size: 2.5rem;
+  }
 }
 
-/* Media Queries - Desktop (1025px+) */
+/* ===== DESKTOP (> 1024px) ===== */
 @media screen and (min-width: 1025px) {
   .mobile-only {
     display: none !important;
@@ -241,28 +466,141 @@ html {
   .desktop-only {
     display: block !important;
   }
-}
-
-/* Landscape Orientation */
-@media screen and (orientation: landscape) and (max-height: 500px) {
-  /* Adjust for landscape mobile */
-  .modal-content {
-    max-height: 90vh;
-    overflow-y: auto;
+  
+  /* Sidebar'lar görünür */
+  #leftSidebarNav {
+    display: flex !important;
+  }
+  
+  .fixed.right-0.w-96 {
+    display: block !important;
+  }
+  
+  /* Hover efektleri aktif */
+  .post-card:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 8px 30px rgba(255, 0, 0, 0.25) !important;
+  }
+  
+  .nav-link:hover {
+    transform: translateX(4px) !important;
   }
 }
 
-/* High DPI Displays */
+/* ===== EKSTRA KÜÇÜK EKRANLAR (< 380px) ===== */
+@media screen and (max-width: 380px) {
+  /* Typography - Daha da küçült */
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.25rem !important; }
+  h3 { font-size: 1.125rem !important; }
+  
+  /* Padding azalt */
+  .p-6 { padding: 1rem !important; }
+  .p-8 { padding: 1.5rem !important; }
+  
+  /* Garaj Kepengi */
+  .garage-door-overlay::after {
+    font-size: 1.5rem !important;
+    letter-spacing: 2px !important;
+  }
+  
+  .garage-open-button {
+    font-size: 0.875rem !important;
+    padding: 10px 24px !important;
+  }
+  
+  /* Grid */
+  .instagram-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ===== BÜYÜK EKRANLAR (> 1536px) ===== */
+@media screen and (min-width: 1536px) {
+  /* Container genişliği artır */
+  .max-w-2xl {
+    max-width: 48rem;
+  }
+  
+  .max-w-4xl {
+    max-width: 64rem;
+  }
+  
+  /* Sidebar genişlikleri */
+  #leftSidebarNav {
+    width: 280px;
+  }
+  
+  .fixed.right-0.w-96 {
+    width: 420px;
+  }
+  
+  /* Main content margin ayarla */
+  #mainContent {
+    margin-left: 280px !important;
+    margin-right: 420px !important;
+  }
+  
+  nav.sticky {
+    margin-left: 280px !important;
+    margin-right: 420px !important;
+  }
+}
+
+/* ===== LANDSCAPE MODE - KÜÇÜK YÜKSEKLIK ===== */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .modal-content,
+  #universalModal > div,
+  #createPostModal > div,
+  #editPostModal > div,
+  #commentsModal > div {
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Garaj Kepengi - Küçült */
+  .garage-door-overlay::after {
+    font-size: 1.5rem !important;
+  }
+  
+  .garage-open-button {
+    padding: 8px 24px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Background efektleri azalt */
+  .animated-bg-glow,
+  .animated-bg-glow-2,
+  .car-silhouette {
+    display: none;
+  }
+}
+
+/* ===== LANDSCAPE MODE - TABLET ===== */
+@media screen and (orientation: landscape) and (min-width: 641px) and (max-width: 1024px) {
+  #leftSidebarNav {
+    width: 60px !important;
+  }
+  
+  #mainContent {
+    margin-left: 60px !important;
+    margin-right: 280px !important;
+  }
+  
+  nav.sticky {
+    margin-left: 60px !important;
+    margin-right: 280px !important;
+  }
+}
+
 @media (-webkit-min-device-pixel-ratio: 2),
        (min-resolution: 192dpi) {
-  /* Sharper images and borders */
   img {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 }
 
-/* Print Styles */
 @media print {
   .no-print {
     display: none !important;
@@ -274,7 +612,6 @@ html {
   }
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -289,16 +626,13 @@ html {
   }
 }
 
-/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
-  /* Already dark, but ensure compatibility */
   body {
     background-color: #180000;
     color: #f1f1f1;
   }
 }
 
-/* Focus Styles for Accessibility */
 *:focus {
   outline: 2px solid #ef4444;
   outline-offset: 2px;
@@ -313,7 +647,6 @@ select:focus {
   outline-offset: 2px;
 }
 
-/* Skip to Content Link (Accessibility) */
 .skip-link {
   position: absolute;
   top: -40px;
@@ -329,21 +662,331 @@ select:focus {
   top: 0;
 }
 
-/* Loading States */
 .loading {
   opacity: 0.6;
   pointer-events: none;
 }
 
-/* Error States */
 .error {
   border-color: #ef4444 !important;
   color: #ef4444;
 }
 
-/* Success States */
 .success {
   border-color: #10b981 !important;
   color: #10b981;
+}
+
+/* ===== İPHONE X/11/12/13/14 NOTCH SUPPORT ===== */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  nav.sticky {
+    top: env(safe-area-inset-top);
+  }
+}
+
+/* ===== KÜÇÜK MOBİL EKRANLAR (iPhone SE, Galaxy Fold) ===== */
+@media screen and (max-width: 360px) {
+  /* Font boyutları küçült */
+  body { font-size: 14px; }
+  h1 { font-size: 1.25rem !important; }
+  h2 { font-size: 1.125rem !important; }
+  h3 { font-size: 1rem !important; }
+  
+  /* Padding azalt */
+  .p-4 { padding: 0.75rem !important; }
+  .p-6 { padding: 1rem !important; }
+  .px-4 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  
+  /* Modal */
+  .modal-content > div {
+    padding: 0.75rem !important;
+  }
+  
+  /* Grid - 2 sütun */
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  /* Instagram Grid */
+  .instagram-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ===== ORTA MOBİL (375px - 428px) - iPhone 12/13/14 Pro Max ===== */
+@media screen and (min-width: 375px) and (max-width: 428px) {
+  /* İdeal mobil görünüm */
+  .post-card {
+    border-radius: 1.25rem;
+  }
+  
+  /* Grid - 3 sütun */
+  .instagram-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.125rem !important;
+  }
+}
+
+/* ===== TABLET PORTRAIT (768px - 1024px) ===== */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  /* Sidebar göster ama dar */
+  #leftSidebarNav {
+    width: 80px !important;
+    display: flex !important;
+  }
+  
+  /* Sağ sidebar gizle */
+  .fixed.right-0.w-96 {
+    display: none !important;
+  }
+  
+  /* Main content */
+  #mainContent {
+    margin-left: 80px !important;
+    margin-right: 0 !important;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  nav.sticky {
+    margin-left: 80px !important;
+    margin-right: 0 !important;
+  }
+  
+  section.mt-10 {
+    margin-left: 80px !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Post Card */
+  .post-card {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Grid */
+  .instagram-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ===== TABLET LANDSCAPE (1024px - 1280px) ===== */
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
+  /* Sidebar'lar normal genişlik */
+  #leftSidebarNav {
+    width: 240px !important;
+  }
+  
+  .fixed.right-0.w-96 {
+    width: 320px !important;
+  }
+  
+  /* Main content margin */
+  #mainContent {
+    margin-left: 240px !important;
+    margin-right: 320px !important;
+  }
+  
+  nav.sticky {
+    margin-left: 240px !important;
+    margin-right: 320px !important;
+  }
+  
+  section.mt-10 {
+    margin-left: 240px !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* ===== CAROUSEL TOUCH SUPPORT ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Swipe için smooth scroll */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .overflow-x-auto > * {
+    scroll-snap-align: start;
+  }
+  
+  /* Tap highlight kaldır */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ===== POST BUTTONS FIX ===== */
+.post-card button {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
+}
+
+.post-card button:active {
+  transform: scale(0.95);
+}
+
+#commentsModal {
+  z-index: 100 !important;
+}
+
+#commentsModal.hidden {
+  display: none !important;
+}
+
+/* ===== NOTIFICATION AND MESSAGE BUTTONS FIX ===== */
+#notificationBtn,
+#messagesBtn,
+#notificationBtnMobile,
+#messagesBtnMobile {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 50 !important;
+  cursor: pointer !important;
+}
+
+#notificationBtn:active,
+#messagesBtn:active,
+#notificationBtnMobile:active,
+#messagesBtnMobile:active {
+  transform: scale(0.95);
+}
+
+/* ===== SIDEBAR FIX ===== */
+#notificationSidebar,
+#messagesSidebar {
+  z-index: 70 !important;
+}
+
+/* ===== MESAJ INPUT VE BUTON MOBİL ===== */
+.message-input-mobile {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.message-send-btn-mobile {
+  flex-shrink: 0 !important;
+  min-width: 44px !important;
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 768px) {
+  .message-input-mobile {
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+  }
+  
+  .message-send-btn-mobile {
+    min-width: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+  
+  #sendMessageForm {
+    gap: 8px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .message-input-mobile {
+    padding: 14px 18px !important;
+    font-size: 16px !important;
+  }
+  
+  .message-send-btn-mobile {
+    min-width: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  #sendMessageForm {
+    gap: 6px !important;
+  }
+}
+
+#notificationSidebar.translate-x-full {
+  transform: translateX(100%) !important;
+}
+
+#notificationSidebar:not(.translate-x-full) {
+  transform: translateX(0) !important;
+}
+
+#messagesSidebar.translate-x-full {
+  transform: translateX(100%) !important;
+}
+
+#messagesSidebar:not(.translate-x-full) {
+  transform: translateX(0) !important;
+}
+
+/* ===== PROFILE PAGE RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  /* Profil section mobil için margin kaldır */
+  section[style*="margin-left: 256px"] {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-top: 1rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Desktop'ta normal margin */
+  section[style*="margin-left: 256px"] {
+    margin-left: 256px !important;
+  }
+}
+
+/* ===== YÜKSEK ÇÖZÜNÜRLÜK (4K, Retina) ===== */
+@media screen and (min-width: 1920px) {
+  /* Container genişlikleri artır */
+  .max-w-2xl {
+    max-width: 56rem;
+  }
+  
+  .max-w-4xl {
+    max-width: 72rem;
+  }
+  
+  /* Sidebar genişlikleri */
+  #leftSidebarNav {
+    width: 320px;
+  }
+  
+  .fixed.right-0.w-96 {
+    width: 480px;
+  }
+  
+  /* Main content margin */
+  #mainContent {
+    margin-left: 320px !important;
+    margin-right: 480px !important;
+  }
+  
+  nav.sticky {
+    margin-left: 320px !important;
+    margin-right: 480px !important;
+  }
+  
+  /* Typography büyüt */
+  body {
+    font-size: 18px;
+  }
 }
 

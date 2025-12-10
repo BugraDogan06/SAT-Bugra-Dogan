@@ -5,273 +5,129 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profil - Piyasa Garage</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/responsive.css">
   <style>
     body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #180000;
-      color: #f1f1f1;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
-      position: relative;
-      min-height: 100vh;
-      width: 100%;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0000 0%, #1a0000 50%, #0a0000 100%);
+      background-attachment: fixed;
     }
-    
-    /* Universal Modal Styles */
-    #universalModal {
-      backdrop-filter: blur(8px);
+
+    .neon-text {
+      font-family: 'Orbitron', sans-serif;
+      color: #ff2b2b;
+      text-shadow: 0 0 10px #ff2b2b, 0 0 20px #ff2b2b, 0 0 40px #ff2b2b;
     }
-    
-    .modal-tab {
-      background: transparent;
-      color: #9ca3af;
-      border: none;
+
+    .profile-stat:hover {
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
     }
-    
-    .modal-tab.active {
-      background: rgba(239, 68, 68, 0.2);
-      color: #ef4444;
-      border-bottom: 2px solid #ef4444;
-    }
-    
-    .modal-tab:hover {
-      background: rgba(239, 68, 68, 0.1);
-      color: #fca5a5;
-    }
-    
-    .modal-tab-content {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Instagram Tarzı Profil Tab Stilleri */
+
     .profile-tab {
       transition: all 0.2s ease;
       cursor: pointer;
+      border-bottom: 2px solid transparent;
     }
-    
+
     .profile-tab.active {
       color: #ffffff;
-      border-color: #ffffff;
+      border-color: #ef4444;
     }
-    
+
     .profile-tab:not(.active) {
       color: #9ca3af;
-      border-color: transparent;
     }
-    
+
     .profile-tab:not(.active):hover {
       color: #ffffff;
     }
-    
-    .profile-tab-content {
-      min-height: 400px;
-    }
-    
-    /* Instagram Tarzı Grid */
+
     .instagram-grid-item {
       aspect-ratio: 1;
       position: relative;
       overflow: hidden;
       cursor: pointer;
       background: #1a1a1a;
+      border-radius: 4px;
     }
-    
+
     .instagram-grid-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .instagram-grid-item:hover img {
-      transform: scale(1.05);
+      transform: scale(1.08);
     }
-    
-    .instagram-grid-item::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+
+    .glass-card {
+      background: rgba(17, 24, 39, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(239, 68, 68, 0.2);
     }
-    
-    .instagram-grid-item:hover::after {
-      opacity: 1;
+
+    .profile-avatar {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border: 4px solid rgba(239, 68, 68, 0.3);
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
     }
-    
-    /* Video/Çoklu Gönderi İkonları */
-    .grid-item-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      z-index: 10;
-      color: white;
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    
-    .grid-item-badge svg {
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
     }
-    
-    /* Video Oynatma Stilleri */
-    .video-thumbnail {
-      transition: opacity 0.3s ease;
-    }
-    
-    .instagram-grid-item:hover .video-thumbnail {
-      opacity: 1;
-    }
-    
-    .instagram-grid-item .video-thumbnail {
-      cursor: pointer;
-    }
-    /* Garaj Kepengi Açılış Efekti - Tüm Sayfa */
-    body::after {
-      content: '';
+
+    /* Garaj Kepengi Animasyonları */
+    .garage-door-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100vh;
+      z-index: 10000;
       background: linear-gradient(to bottom, 
-        rgba(0, 0, 0, 1) 0%,
-        rgba(0, 0, 0, 0.95) 30%,
-        rgba(0, 0, 0, 0.9) 50%,
-        rgba(0, 0, 0, 0.95) 70%,
-        rgba(0, 0, 0, 1) 100%
-      );
-      transform-origin: top;
-      transform: translateY(-100%);
-      animation: garageDoorOpen 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      z-index: 9999;
-      pointer-events: none;
-    }
-    @keyframes garageDoorOpen {
-      0% {
-        transform: translateY(-100%);
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 0;
-      }
-    }
-    /* Sayfa İçeriği Animasyonu */
-    #pageContent {
-      transform: translateY(100%);
-      animation: contentSlideUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      animation-delay: 0.2s;
-      opacity: 0;
-    }
-    @keyframes contentSlideUp {
-      0% {
-        transform: translateY(100%);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at top, rgba(239, 68, 68, 0.2), transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(120deg, rgba(239,68,68,0.15), transparent 60%);
-      animation: heroGlow 10s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-      animation-delay: 1.7s;
-    }
-    /* Garaj Kepengi Açılış Efekti - Tüm Sayfa (Açık Gri Roller Shutter) */
-    .garage-door-overlay {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background: linear-gradient(to bottom, 
-        rgba(40, 40, 40, 1) 0%,
-        rgba(45, 45, 45, 1) 2%,
-        rgba(40, 40, 40, 1) 4%,
-        rgba(45, 45, 45, 1) 6%,
-        rgba(40, 40, 40, 1) 8%,
-        rgba(45, 45, 45, 1) 10%,
-        rgba(40, 40, 40, 1) 12%,
-        rgba(45, 45, 45, 1) 14%,
-        rgba(40, 40, 40, 1) 16%,
-        rgba(45, 45, 45, 1) 18%,
-        rgba(40, 40, 40, 1) 20%,
-        rgba(45, 45, 45, 1) 22%,
-        rgba(40, 40, 40, 1) 24%,
-        rgba(45, 45, 45, 1) 26%,
-        rgba(40, 40, 40, 1) 28%,
-        rgba(45, 45, 45, 1) 30%,
-        rgba(40, 40, 40, 1) 32%,
-        rgba(45, 45, 45, 1) 34%,
-        rgba(40, 40, 40, 1) 36%,
-        rgba(45, 45, 45, 1) 38%,
-        rgba(40, 40, 40, 1) 40%,
-        rgba(45, 45, 45, 1) 42%,
-        rgba(40, 40, 40, 1) 44%,
-        rgba(45, 45, 45, 1) 46%,
-        rgba(40, 40, 40, 1) 48%,
-        rgba(45, 45, 45, 1) 50%,
-        rgba(40, 40, 40, 1) 52%,
-        rgba(45, 45, 45, 1) 54%,
-        rgba(40, 40, 40, 1) 56%,
-        rgba(45, 45, 45, 1) 58%,
-        rgba(40, 40, 40, 1) 60%,
-        rgba(45, 45, 45, 1) 62%,
-        rgba(40, 40, 40, 1) 64%,
-        rgba(45, 45, 45, 1) 66%,
-        rgba(40, 40, 40, 1) 68%,
-        rgba(45, 45, 45, 1) 70%,
-        rgba(40, 40, 40, 1) 72%,
-        rgba(45, 45, 45, 1) 74%,
-        rgba(40, 40, 40, 1) 76%,
-        rgba(45, 45, 45, 1) 78%,
-        rgba(40, 40, 40, 1) 80%,
-        rgba(45, 45, 45, 1) 82%,
-        rgba(40, 40, 40, 1) 84%,
-        rgba(45, 45, 45, 1) 86%,
-        rgba(40, 40, 40, 1) 88%,
-        rgba(45, 45, 45, 1) 90%,
-        rgba(40, 40, 40, 1) 92%,
-        rgba(45, 45, 45, 1) 94%,
-        rgba(40, 40, 40, 1) 96%,
-        rgba(45, 45, 45, 1) 98%,
+        rgba(40, 40, 40, 1) 0%, rgba(45, 45, 45, 1) 2%,
+        rgba(40, 40, 40, 1) 4%, rgba(45, 45, 45, 1) 6%,
+        rgba(40, 40, 40, 1) 8%, rgba(45, 45, 45, 1) 10%,
+        rgba(40, 40, 40, 1) 12%, rgba(45, 45, 45, 1) 14%,
+        rgba(40, 40, 40, 1) 16%, rgba(45, 45, 45, 1) 18%,
+        rgba(40, 40, 40, 1) 20%, rgba(45, 45, 45, 1) 22%,
+        rgba(40, 40, 40, 1) 24%, rgba(45, 45, 45, 1) 26%,
+        rgba(40, 40, 40, 1) 28%, rgba(45, 45, 45, 1) 30%,
+        rgba(40, 40, 40, 1) 32%, rgba(45, 45, 45, 1) 34%,
+        rgba(40, 40, 40, 1) 36%, rgba(45, 45, 45, 1) 38%,
+        rgba(40, 40, 40, 1) 40%, rgba(45, 45, 45, 1) 42%,
+        rgba(40, 40, 40, 1) 44%, rgba(45, 45, 45, 1) 46%,
+        rgba(40, 40, 40, 1) 48%, rgba(45, 45, 45, 1) 50%,
+        rgba(40, 40, 40, 1) 52%, rgba(45, 45, 45, 1) 54%,
+        rgba(40, 40, 40, 1) 56%, rgba(45, 45, 45, 1) 58%,
+        rgba(40, 40, 40, 1) 60%, rgba(45, 45, 45, 1) 62%,
+        rgba(40, 40, 40, 1) 64%, rgba(45, 45, 45, 1) 66%,
+        rgba(40, 40, 40, 1) 68%, rgba(45, 45, 45, 1) 70%,
+        rgba(40, 40, 40, 1) 72%, rgba(45, 45, 45, 1) 74%,
+        rgba(40, 40, 40, 1) 76%, rgba(45, 45, 45, 1) 78%,
+        rgba(40, 40, 40, 1) 80%, rgba(45, 45, 45, 1) 82%,
+        rgba(40, 40, 40, 1) 84%, rgba(45, 45, 45, 1) 86%,
+        rgba(40, 40, 40, 1) 88%, rgba(45, 45, 45, 1) 90%,
+        rgba(40, 40, 40, 1) 92%, rgba(45, 45, 45, 1) 94%,
+        rgba(40, 40, 40, 1) 96%, rgba(45, 45, 45, 1) 98%,
         rgba(40, 40, 40, 1) 100%
       );
       transform-origin: bottom;
       transform: translateY(0);
       opacity: 1;
       visibility: visible;
-      z-index: 10000;
       pointer-events: none;
-      box-shadow: 
-        0 -10px 50px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -281,7 +137,7 @@
       border-bottom: none;
       box-sizing: border-box;
     }
-    /* Oluklu (Corrugated) Panel Efekti - Her panel altındakine gölge düşürüyor */
+
     .garage-door-overlay::before {
       content: '';
       position: absolute;
@@ -290,7 +146,6 @@
       width: 100%;
       height: 100%;
       background-image: 
-        /* Oluklu panel çizgileri - yuvarlak, 3D efekt */
         repeating-linear-gradient(
           0deg,
           rgba(60, 60, 60, 0.6) 0px,
@@ -302,7 +157,6 @@
           transparent 3px,
           transparent 35px
         ),
-        /* Panel gölgeleri - her panel altındakine gölge düşürüyor */
         repeating-linear-gradient(
           0deg,
           rgba(0, 0, 0, 0.3) 0px,
@@ -314,7 +168,7 @@
         inset 0 1px 2px rgba(255, 255, 255, 0.3),
         inset 0 -1px 2px rgba(0, 0, 0, 0.2);
     }
-    /* Piyasa Garage yazısı - Neon Kırmızı (Kepenk ile birlikte hareket eder) */
+
     .garage-door-overlay::after {
       content: 'Piyasa Garage';
       position: absolute;
@@ -334,7 +188,7 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
-    /* Garajı Aç Butonu */
+
     .garage-open-button {
       position: absolute;
       top: 60%;
@@ -361,6 +215,7 @@
       transition: all 0.3s ease;
       pointer-events: auto;
     }
+
     .garage-open-button:hover {
       background: rgba(255, 43, 43, 0.2);
       box-shadow: 
@@ -368,383 +223,44 @@
         inset 0 0 30px rgba(255, 43, 43, 0.2);
       transform: translate(-50%, -50%) scale(1.05);
     }
+
     .garage-open-button:active {
       transform: translate(-50%, -50%) scale(0.98);
     }
-    /* Kepenk açılış animasyonu (buton ile tetiklenir) - Animasyon yok, direkt kaybolur */
+
     .garage-door-overlay.opening {
-      display: none;
+      animation: garageShutterOpen 2.5s cubic-bezier(0.34, 0.1, 0.25, 1) forwards;
     }
-    @keyframes garageDoorOpen {
+
+    @keyframes garageShutterOpen {
       0% {
         transform: translateY(0);
         opacity: 1;
-        visibility: visible;
       }
-      100% {
-        transform: translateY(-100%);
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-    /* Sayfa İçeriği - Normal görünsün, animasyon yok */
-    #pageContent {
-      opacity: 1 !important;
-      transform: none !important;
-      animation: none !important;
-    }
-    @keyframes heroGlow {
-      0%, 100% { opacity: 0.45; }
-      50% { opacity: 0.75; }
-    }
-    .animated-bg-glow {
-      position: fixed;
-      width: 700px;
-      height: 700px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(239,68,68,0.15), transparent 60%);
-      top: -350px;
-      right: -250px;
-      filter: blur(60px);
-      animation: heroPulse 8s infinite alternate;
-      pointer-events: none;
-      z-index: 0;
-    }
-    @keyframes heroPulse {
-      from { transform: scale(0.9) translateY(10px); opacity: 0.5; }
-      to { transform: scale(1.05) translateY(-10px); opacity: 0.8; }
-    }
-    .animated-bg-glow-2 {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(220,38,38,0.12), transparent 60%);
-      bottom: -300px;
-      left: -200px;
-      filter: blur(50px);
-      animation: heroPulse 10s infinite alternate-reverse;
-      pointer-events: none;
-      z-index: 0;
-    }
-    /* Login Sayfası Araba Animasyonları */
-    .car-silhouette {
-      position: fixed;
-      width: 800px;
-      height: 400px;
-      bottom: -80px;
-      right: -150px;
-      opacity: 0.25;
-      background: linear-gradient(135deg, rgba(239,68,68,0.5), rgba(220,38,38,0.3), transparent);
-      clip-path: polygon(15% 65%, 20% 55%, 28% 48%, 38% 42%, 50% 40%, 65% 42%, 78% 48%, 88% 55%, 93% 65%, 96% 75%, 93% 82%, 88% 88%, 78% 92%, 65% 94%, 50% 95%, 38% 94%, 28% 92%, 20% 88%, 15% 82%);
-      box-shadow: 0 0 60px rgba(239,68,68,0.4);
-      animation: carDrive 15s ease-in-out infinite;
-      filter: blur(1px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .car-silhouette::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      animation: carShine 3s ease-in-out infinite;
-    }
-    .speed-streak {
-      position: fixed;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, rgba(239,68,68,0.8), rgba(255,255,255,0.6), rgba(239,68,68,0.8), transparent);
-      box-shadow: 0 0 10px rgba(239,68,68,0.8);
-      animation: speedStreak 1.5s linear infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .speed-streak:nth-child(1) { bottom: 25%; animation-delay: 0s; height: 3px; }
-    .speed-streak:nth-child(2) { bottom: 45%; animation-delay: 0.3s; height: 4px; }
-    .speed-streak:nth-child(3) { bottom: 65%; animation-delay: 0.6s; height: 3px; }
-    .speed-streak:nth-child(4) { bottom: 35%; animation-delay: 0.9s; height: 2px; }
-    .speed-streak:nth-child(5) { bottom: 55%; animation-delay: 1.2s; height: 2px; }
-    .neon-glow {
-      position: fixed;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(239,68,68,0.5), rgba(220,38,38,0.3), transparent 70%);
-      filter: blur(50px);
-      animation: neonPulse 3s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .neon-glow.top-left {
-      top: -150px;
-      left: -150px;
-    }
-    .neon-glow.bottom-right {
-      bottom: -150px;
-      right: -150px;
-      animation-delay: 1.5s;
-    }
-    .exhaust-smoke {
-      position: fixed;
-      width: 60px;
-      height: 120px;
-      bottom: 50px;
-      right: 100px;
-      background: radial-gradient(ellipse at bottom, rgba(100,100,100,0.4), transparent);
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      animation: exhaustRise 2s ease-out infinite;
-      opacity: 0.6;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .exhaust-smoke::before,
-    .exhaust-smoke::after {
-      content: '';
-      position: absolute;
-      width: 40px;
-      height: 80px;
-      background: radial-gradient(ellipse at bottom, rgba(120,120,120,0.3), transparent);
-      border-radius: 50%;
-      animation: exhaustRise 2.5s ease-out infinite;
-    }
-    .exhaust-smoke::before {
-      left: -20px;
-      animation-delay: 0.3s;
-    }
-    .exhaust-smoke::after {
-      right: -20px;
-      animation-delay: 0.6s;
-    }
-    @keyframes carDrive {
-      0%, 100% { transform: translateX(0) translateY(0) scale(1); opacity: 0.25; }
-      25% { transform: translateX(-30px) translateY(-10px) scale(1.02); opacity: 0.3; }
-      50% { transform: translateX(-60px) translateY(-5px) scale(1.05); opacity: 0.35; }
-      75% { transform: translateX(-30px) translateY(-10px) scale(1.02); opacity: 0.3; }
-    }
-    @keyframes carShine {
-      0%, 100% { transform: translateX(-100%); }
-      50% { transform: translateX(100%); }
-    }
-    @keyframes speedStreak {
-      0% { transform: translateX(-100%); opacity: 0; }
-      20% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { transform: translateX(100%); opacity: 0; }
-    }
-    @keyframes neonPulse {
-      0%, 100% { transform: scale(1); opacity: 0.4; }
-      50% { transform: scale(1.3); opacity: 0.7; }
-    }
-    @keyframes exhaustRise {
-      0% { transform: translateY(0) scaleY(1); opacity: 0.6; }
-      100% { transform: translateY(-150px) scaleY(1.5); opacity: 0; }
-    }
-    /* Arka Plan Araba Görseli - Kırmızı-Siyah Tonlarında Spor Araba */
-    .background-car {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      opacity: 0.8;
-      z-index: 0;
-      filter: brightness(0.5) contrast(1.8) saturate(1.6) hue-rotate(-5deg);
-      animation: carFloat 12s ease-in-out infinite;
-      pointer-events: none;
-    }
-    .background-car img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-    }
-    .background-car::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.2) 60%, transparent 100%);
-      z-index: 1;
-    }
-    .background-car::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center 70%, rgba(239,68,68,0.15) 0%, transparent 50%);
-      z-index: 2;
-    }
-    @keyframes carFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
-      50% { transform: translateX(-50%) translateY(-15px) scale(1.01); }
-    }
-    /* Navbar Glow Efektleri */
-    #leftSidebarNav::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(239,68,68,0.1) 0%, transparent 50%, rgba(239,68,68,0.1) 100%);
-      animation: navbarGlow 4s ease-in-out infinite;
-      pointer-events: none;
-      z-index: -1;
-    }
-    @keyframes navbarGlow {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-    }
-    nav.sticky::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(239,68,68,0.1), transparent);
-      animation: navbarGlow 5s ease-in-out infinite;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .neon {
-      font-family: 'Orbitron', sans-serif;
-      color: #ff2b2b;
-      text-shadow: 0 0 10px #ff2b2b, 0 0 20px #ff2b2b, 0 0 40px #ff2b2b;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #ff2b2b, 0 0 20px #ff2b2b; }
-      50% { opacity: 0.7; text-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff4d4d; }
-    }
-    /* Garaj Kepengi Açılış Animasyonu */
-    .garage-door-logo {
-      position: relative;
-      transform: translateY(100%);
-      animation: garageDoorOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      animation-delay: 0.3s;
-    }
-    .garage-door-logo::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, 
-        rgba(0, 0, 0, 0.9) 0%,
-        rgba(0, 0, 0, 0.7) 50%,
-        rgba(0, 0, 0, 0.9) 100%
-      );
-      transform-origin: top;
-      transform: translateY(-100%);
-      animation: garageDoorSlide 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      animation-delay: 0.3s;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .garage-door-logo::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, 
-        transparent,
-        rgba(239, 68, 68, 0.8),
-        rgba(255, 255, 255, 0.6),
-        rgba(239, 68, 68, 0.8),
-        transparent
-      );
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
-      transform: translateY(-100%);
-      animation: garageDoorLine 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      animation-delay: 0.3s;
-      z-index: 2;
-      pointer-events: none;
-    }
-    @keyframes garageDoorOpen {
-      0% {
-        transform: translateY(100%);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    @keyframes garageDoorSlide {
-      0% {
-        transform: translateY(-100%);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
-    @keyframes garageDoorLine {
-      0% {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
-      50% {
+      70% {
         opacity: 1;
       }
       100% {
-        transform: translateY(0);
-        opacity: 0;
+        transform: translateY(-100%);
+        opacity: 0; 
       }
     }
-    /* Sol Navbar Stilleri */
-    #leftSidebarNav {
-      overflow: visible;
-    }
-    .nav-link {
-      position: relative;
-      transition: transform 0.3s ease;
-    }
-    .nav-link:hover {
-      transform: translateX(4px);
-    }
-    .nav-tooltip {
-      position: absolute;
-      left: calc(100% + 12px);
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.9);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      z-index: 1000;
-    }
-    .nav-link:hover .nav-tooltip {
-      opacity: 1;
-      visibility: visible;
-    }
-    .nav-tooltip::before {
-      content: '';
-      position: absolute;
-      right: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 6px solid transparent;
-      border-right-color: rgba(0, 0, 0, 0.9);
-    }
-    .nav-link.active > div {
-      background: rgba(239, 68, 68, 0.4);
-      border-color: rgba(239, 68, 68, 0.6);
-    }
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
+
+    @media (max-width: 640px) {
+      .garage-door-overlay::after {
+        font-size: 2rem;
+        top: 35%;
+      }
+      
+      .garage-open-button {
+        font-size: 1rem;
+        padding: 12px 32px;
+        top: 55%;
+      }
     }
   </style>
 </head>
-<body>
+<body class="text-white min-h-screen">
   <!-- Garaj Kepengi Overlay -->
   <div class="garage-door-overlay" id="garageDoorOverlay">
     <button class="garage-open-button" id="garageOpenButton" onclick="openGarage()">Garajı Aç</button>
@@ -752,1411 +268,409 @@
   
   <!-- Sayfa İçeriği -->
   <div id="pageContent">
-  <!-- Arka Plan Görseli - Ana Katman -->
-  <div class="fixed inset-0" style="z-index: 0;">
-    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center_70%,_var(--tw-gradient-stops))] from-red-900/20 via-transparent to-transparent"></div>
+  <!-- Background Effects -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-red-600 rounded-full filter blur-3xl opacity-10"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-red-700 rounded-full filter blur-3xl opacity-10"></div>
     </div>
 
-  <!-- Arka Plan Araba Görseli - Kırmızı-Siyah Tonlarında Spor Araba -->
-  <div class="background-car">
-    <img src="https://images.pexels.com/photos/3802508/pexels-photo-3802508.jpeg?auto=compress&cs=tinysrgb&w=1920" 
-         alt="Kırmızı Spor Araba">
-  </div>
+  <!-- Mobile Sidebar Overlay -->
+  <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[75] hidden lg:hidden" onclick="toggleMobileSidebar()"></div>
   
-  <!-- Ekstra Gradient Katmanları -->
-  <div class="fixed inset-0" style="z-index: 0;">
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-    <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 via-transparent to-black/50"></div>
+  <!-- Sidebar Navigation -->
+  <nav id="leftSidebarNav" class="fixed left-0 top-0 h-full w-64 bg-black/95 backdrop-blur-md border-r border-red-700/50 flex flex-col py-6 px-4 transition-transform duration-300 -translate-x-full lg:translate-x-0 z-[70]">
+    <!-- Logo -->
+    <div class="mb-8 px-4 flex items-center justify-between">
+      <h1 class="neon-text text-2xl font-bold">Piyasa Garage</h1>
+      <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-red-600/20">
+        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
-
-  <!-- Animasyonlu Arka Plan Glow Efektleri -->
-  <div class="animated-bg-glow"></div>
-  <div class="animated-bg-glow-2"></div>
-  
-  <!-- Araba Animasyonları -->
-  <div class="car-silhouette"></div>
-  <div class="speed-streak"></div>
-  <div class="speed-streak"></div>
-  <div class="speed-streak"></div>
-  <div class="speed-streak"></div>
-  <div class="speed-streak"></div>
-  <div class="neon-glow top-left"></div>
-  <div class="neon-glow bottom-right"></div>
-  <div class="exhaust-smoke"></div>
-
-  <!-- Sol Sidebar Navbar -->
-  <nav id="leftSidebarNav" class="fixed left-0 top-0 h-full w-20 lg:w-24 z-50 bg-black/90 backdrop-blur-md border-r border-red-700/50 hidden lg:flex flex-col items-center py-6 space-y-6">
-    <!-- Navigasyon Linkleri -->
-    <div class="flex-1 flex flex-col items-center justify-center space-y-6">
-      <a href="index.html" class="nav-link group relative" title="Keşfet">
-        <div class="w-10 h-10 rounded-lg bg-red-600/20 hover:bg-red-600/40 flex items-center justify-center transition-all duration-300 border border-transparent hover:border-red-600">
-          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    
+    <!-- Navigation Links -->
+    <div class="flex-1 flex flex-col space-y-2">
+      <a href="index.html" class="nav-link-expanded group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-red-600/20 border-2 border-transparent hover:border-red-600/40 transition-all duration-300">
+        <div class="flex-shrink-0">
+          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
         </div>
-        <span class="nav-tooltip">Keşfet</span>
+        <span class="text-gray-300 group-hover:text-white font-semibold text-base transition">Keşfet</span>
       </a>
       
-      <a href="events.html" class="nav-link group relative" title="Etkinlikler">
-        <div class="w-10 h-10 rounded-lg bg-red-600/20 hover:bg-red-600/40 flex items-center justify-center transition-all duration-300 border border-transparent hover:border-red-600">
-          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href="events.html" class="nav-link-expanded group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-red-600/20 border-2 border-transparent hover:border-red-600/40 transition-all duration-300">
+        <div class="flex-shrink-0">
+          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
         </div>
-        <span class="nav-tooltip">Etkinlikler</span>
+        <span class="text-gray-300 group-hover:text-white font-semibold text-base transition">Etkinlikler</span>
       </a>
       
-      <a href="profile.html" class="nav-link group relative active" title="Garajım">
-        <div class="w-10 h-10 rounded-lg bg-red-600/40 hover:bg-red-600/50 flex items-center justify-center transition-all duration-300 border border-red-600">
-          <svg class="w-6 h-6 text-red-300 transition" fill="currentColor" viewBox="0 0 252.094 252.094">
+      <a href="profile.html" class="nav-link-expanded group flex items-center gap-4 px-4 py-3 rounded-xl bg-red-600/20 border-2 border-red-600/40 hover:bg-red-600/30 transition-all duration-300">
+        <div class="flex-shrink-0">
+          <svg class="w-6 h-6 text-red-300" fill="currentColor" viewBox="0 0 252.094 252.094">
             <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z M70.352,159.384l10.161-24.754c2.089-5.088,8.298-9.251,13.798-9.251h63.363c5.5,0,11.709,4.163,13.798,9.251l10.161,24.754c2.089,5.088-0.702,9.251-6.202,9.251H76.554C71.054,168.635,68.263,164.472,70.352,159.384z M97.292,199.635c0,2.75-2.25,5-5,5H71.554c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.738c2.75,0,5,2.25,5,5V199.635z M185.203,199.635c0,2.75-2.25,5-5,5h-20.736c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.736c2.75,0,5,2.25,5,5V199.635z"/>
             <path d="M246.545,71.538L131.625,4.175c-1.525-0.894-3.506-1.386-5.578-1.386c-2.072,0-4.053,0.492-5.578,1.386L5.549,71.538C2.386,73.392,0,77.556,0,81.223v160.582c0,4.135,3.364,7.5,7.5,7.5h12.912c4.136,0,7.5-3.365,7.5-7.5V105.917c0-1.378,1.121-2.5,2.5-2.5h191.268c1.379,0,2.5,1.122,2.5,2.5v135.888c0,4.135,3.364,7.5,7.5,7.5h12.913c4.136,0,7.5-3.365,7.5-7.5V81.223C252.094,77.556,249.708,73.392,246.545,71.538z"/>
           </svg>
         </div>
-        <span class="nav-tooltip">Garajım</span>
+        <span class="text-white font-semibold text-base">Garajım</span>
       </a>
       
-      <button onclick="openCreatePostModal()" class="nav-link group relative" title="Yeni Gönderi">
-        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-red-600/50">
-          <svg class="w-6 h-6 text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button onclick="openCreatePostModal()" class="nav-link-expanded group flex items-center gap-4 px-4 py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-lg hover:shadow-red-600/50 mt-4">
+        <div class="flex-shrink-0">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
         </div>
-        <span class="nav-tooltip">Yeni Gönderi</span>
+        <span class="text-white font-bold text-base">Yeni Gönderi</span>
+      </button>
+      
+      <button onclick="openNotificationsModal()" class="nav-link-expanded group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-red-600/20 border-2 border-transparent hover:border-red-600/40 transition-all duration-300 mt-2">
+        <div class="flex-shrink-0 relative">
+          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+          <span id="notificationBadgeSidebar" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+        </div>
+        <span class="text-gray-300 group-hover:text-white font-semibold text-base transition">Bildirimler</span>
+      </button>
+      
+      <button onclick="openMessagesModal()" class="nav-link-expanded group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-red-600/20 border-2 border-transparent hover:border-red-600/40 transition-all duration-300">
+        <div class="flex-shrink-0 relative">
+          <svg class="w-6 h-6 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          <span id="messagesBadgeSidebar" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+        </div>
+        <span class="text-gray-300 group-hover:text-white font-semibold text-base transition">Mesajlar</span>
       </button>
     </div>
   </nav>
 
-  <!-- Üst Navbar -->
-  <nav class="sticky top-0 z-40 bg-black bg-opacity-80 backdrop-blur-md flex items-center justify-center px-8 py-4 border-b border-red-700 relative" style="margin-left: 96px;">
-    <!-- Ortada - Logo -->
-    <h1 class="text-2xl font-bold neon">
-      <a href="index.html">Piyasa Garage</a>
-    </h1>
-
-    <!-- Sağ - Arama -->
-    <div class="absolute right-8">
-      <div class="relative">
-        <input 
-          type="text" 
-          id="searchInput"
-          placeholder="Kullanıcı ara..." 
-          class="w-64 py-2 pl-10 pr-4 rounded-full bg-neutral-800 border border-gray-600 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 placeholder-gray-400"
-        />
-        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+  <!-- Mobile Top Navbar -->
+  <nav id="mobileTopNavbar" class="sticky top-0 z-40 bg-black/80 backdrop-blur-md flex items-center justify-between px-4 py-3 border-b border-red-700 lg:hidden">
+    <!-- Sol - Hamburger Menü -->
+    <button onclick="toggleMobileSidebar()" class="p-2 rounded-lg hover:bg-red-600/20">
+      <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+    
+    <!-- Orta - Logo -->
+    <h1 class="neon-text text-lg font-bold">Piyasa Garage</h1>
+    
+    <!-- Sağ - Bildirim, Mesaj ve Gönderi Butonları -->
+    <div class="flex items-center gap-1">
+      <!-- Bildirim -->
+      <button onclick="openNotificationsModal()" class="relative p-2 rounded-lg hover:bg-red-600/20">
+        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
         </svg>
-        
-        <!-- Arama Sonuçları Dropdown -->
-        <div id="searchResultsContainer" class="hidden absolute top-full left-0 mt-2 w-full bg-black/95 backdrop-blur-md rounded-xl border border-gray-700 shadow-2xl z-50 max-h-96 overflow-y-auto scrollbar-hide">
-          <div class="p-3" id="searchResultsList">
-            <!-- Arama sonuçları buraya eklenecek -->
-          </div>
-        </div>
-      </div>
+        <span id="notificationBadgeMobile" class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center hidden text-[10px]">0</span>
+      </button>
+      
+      <!-- Mesajlar -->
+      <button onclick="openMessagesModal()" class="relative p-2 rounded-lg hover:bg-red-600/20">
+        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <span id="messagesBadgeMobile" class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center hidden text-[10px]">0</span>
+      </button>
+      
+      <!-- Yeni Gönderi -->
+      <button onclick="openCreatePostModal()" class="p-2 rounded-lg hover:bg-red-600/20">
+        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+      </button>
     </div>
   </nav>
 
-  <!-- Profil - Instagram Tarzı -->
-  <section class="max-w-6xl mx-auto mt-8 px-4 lg:pl-24 relative pb-20" style="z-index: 1;">
-    <!-- Profil Header - Instagram Tarzı -->
-    <div id="profileContainer" class="mb-12">
-      <div class="flex flex-col md:flex-row gap-8 md:gap-12">
-        <!-- Profil Fotoğrafı -->
-        <div class="flex justify-center md:justify-start">
+  <!-- Main Content -->
+  <main class="relative z-10 lg:ml-64 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 py-8">
+      <!-- Profile Header - Instagram Style -->
+      <div class="glass-card rounded-2xl p-6 md:p-8 mb-6 animate-fade-in">
+        <div class="flex flex-col md:flex-row gap-8 items-start">
+          <!-- Profile Picture -->
+          <div class="flex justify-center md:justify-start w-full md:w-auto">
           <div class="relative">
-            <img id="profilePicture" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect width='150' height='150' fill='%23333'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='20'%3E%3F%3C/text%3E%3C/svg%3E" alt="Profil" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-gray-700 object-cover">
+              <img id="profilePicture" 
+                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect width='150' height='150' fill='%23333'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='60'%3E%3F%3C/text%3E%3C/svg%3E" 
+                   alt="Profil" 
+                   class="profile-avatar w-32 h-32 md:w-40 md:h-40 rounded-full object-cover">
           </div>
         </div>
         
-        <!-- Profil Bilgileri -->
-        <div class="flex-1">
-          <!-- Kullanıcı Adı ve Butonlar -->
+          <!-- Profile Info -->
+          <div class="flex-1 w-full">
+            <!-- Username & Actions -->
           <div class="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
-            <h2 id="profileName" class="text-2xl md:text-4xl font-light text-white">Kullanıcı Adı</h2>
+              <h2 id="profileName" class="text-2xl md:text-3xl font-light text-white">@kullanici</h2>
             
+              <!-- Action Buttons -->
             <div class="flex items-center gap-2 flex-wrap" id="profileButtons">
-              <!-- Kendi Profili İçin Butonlar -->
-              <button onclick="openEditProfileModal()" id="editProfileBtn" class="hidden px-4 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-gray-700 rounded-lg text-white text-sm font-semibold transition">
-                Profil Düzenle
+                <!-- Own Profile Buttons -->
+                <button onclick="openEditProfileModal()" id="editProfileBtn" class="hidden px-5 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-white text-sm font-semibold transition flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                  Profili Düzenle
               </button>
-              <button onclick="openCreatePostModal()" id="createPostBtn" class="hidden px-4 py-1.5 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition">
-                Gönderi Paylaş
-              </button>
-              <button onclick="openAddCarModal()" id="addCarBtn" class="hidden px-4 py-1.5 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                <button onclick="openAddCarModal()" id="addCarBtn" class="hidden px-5 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 252.094 252.094">
+                    <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z"/>
                 </svg>
                 Araç Ekle
               </button>
-              <button data-auth-logout id="logoutBtn" class="hidden px-4 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-gray-700 rounded-lg text-white text-sm font-semibold transition">
-                Çıkış Yap
+                <button onclick="handleLogout()" id="logoutBtn" class="hidden px-5 py-2 bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 border border-red-600 rounded-lg text-white text-sm font-semibold transition flex items-center gap-2 shadow-lg">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                  </svg>
+                  Çıkış Yap
               </button>
               
-              <!-- Diğer Kullanıcı Profili İçin Butonlar -->
+                <!-- Other User Profile Buttons -->
               <div id="followButtonContainer" class="hidden flex items-center gap-2">
-                <button id="followButton" onclick="toggleFollow()" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition">
+                  <button id="followButton" onclick="toggleFollow()" class="px-5 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition">
                   Takip Et
                 </button>
-                <button id="sendMessageBtn" onclick="openMessageFromProfile()" class="px-4 py-1.5 bg-neutral-800 hover:bg-neutral-700 border border-gray-700 rounded-lg text-white text-sm font-semibold transition">
+                  <button onclick="openMessageFromProfile()" class="px-5 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-white text-sm font-semibold transition">
                   Mesaj
-                </button>
-                <button class="p-1.5 bg-neutral-800 hover:bg-neutral-700 border border-gray-700 rounded-lg text-white transition">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                  </svg>
                 </button>
               </div>
             </div>
           </div>
           
-          <!-- İstatistikler -->
+            <!-- Stats - Instagram Style -->
           <div class="flex items-center gap-8 mb-6">
-            <div class="text-center md:text-left">
-              <span class="text-base font-semibold text-white" id="postsCount">0</span>
-              <span class="text-gray-400 ml-1">gönderi</span>
+              <div class="profile-stat cursor-pointer" onclick="switchProfileTab('posts')">
+                <span class="text-lg font-bold text-white block" id="postsCount">0</span>
+                <span class="text-gray-400 text-sm">gönderi</span>
             </div>
-            <div class="text-center md:text-left">
-              <span class="text-base font-semibold text-white" id="followersCount">0</span>
-              <span class="text-gray-400 ml-1">takipçi</span>
+              <div class="profile-stat cursor-pointer">
+                <span class="text-lg font-bold text-white block" id="followersCount">0</span>
+                <span class="text-gray-400 text-sm">takipçi</span>
             </div>
-            <div class="text-center md:text-left">
-              <span class="text-base font-semibold text-white" id="followingCount">0</span>
-              <span class="text-gray-400 ml-1">takip</span>
+              <div class="profile-stat cursor-pointer">
+                <span class="text-lg font-bold text-white block" id="followingCount">0</span>
+                <span class="text-gray-400 text-sm">takip</span>
+              </div>
+              <div class="profile-stat cursor-pointer" onclick="switchProfileTab('cars')">
+                <span class="text-lg font-bold text-white block" id="carsCountMain">0</span>
+                <span class="text-gray-400 text-sm">araç</span>
             </div>
           </div>
           
-          <!-- Kullanıcı Adı ve Biyografi -->
-          <div class="mb-4">
-            <h3 id="profileFullName" class="text-sm font-semibold text-white mb-2"></h3>
-            <p id="profileBio" class="text-sm text-white whitespace-pre-line">Biyografi buraya gelecek</p>
+            <!-- Bio -->
+            <div>
+              <h3 id="profileFullName" class="text-white font-semibold mb-1"></h3>
+              <p id="profileBio" class="text-gray-300 text-sm whitespace-pre-line leading-relaxed">Biyografi yükleniyor...</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Tab Navigation - Instagram Tarzı -->
-    <div class="border-t border-gray-700 mb-0">
-      <div class="flex items-center justify-center gap-0">
-        <button onclick="switchProfileTab('posts')" id="tab-posts-btn" class="profile-tab active flex items-center gap-2 px-8 py-4 text-sm font-semibold text-white border-t-2 border-white -mt-px">
+      <!-- Tabs Navigation -->
+      <div class="glass-card rounded-t-2xl border-b-0 mb-0">
+        <div class="flex items-center justify-center">
+          <button onclick="switchProfileTab('posts')" id="tab-posts-btn" class="profile-tab active flex items-center gap-2 px-8 py-4 text-sm font-bold uppercase tracking-wider">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
           </svg>
-          <span>GÖNDERİLER</span>
+            Gönderiler
         </button>
-        <button onclick="switchProfileTab('cars')" id="tab-cars-btn" class="profile-tab flex items-center gap-2 px-8 py-4 text-sm font-semibold text-gray-400 border-t-2 border-transparent -mt-px hover:text-white transition">
+          <button onclick="switchProfileTab('cars')" id="tab-cars-btn" class="profile-tab flex items-center gap-2 px-8 py-4 text-sm font-bold uppercase tracking-wider">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 252.094 252.094">
-            <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z M70.352,159.384l10.161-24.754c2.089-5.088,8.298-9.251,13.798-9.251h63.363c5.5,0,11.709,4.163,13.798,9.251l10.161,24.754c2.089,5.088-0.702,9.251-6.202,9.251H76.554C71.054,168.635,68.263,164.472,70.352,159.384z M97.292,199.635c0,2.75-2.25,5-5,5H71.554c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.738c2.75,0,5,2.25,5,5V199.635z M185.203,199.635c0,2.75-2.25,5-5,5h-20.736c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.736c2.75,0,5,2.25,5,5V199.635z"/>
-            <path d="M246.545,71.538L131.625,4.175c-1.525-0.894-3.506-1.386-5.578-1.386c-2.072,0-4.053,0.492-5.578,1.386L5.549,71.538C2.386,73.392,0,77.556,0,81.223v160.582c0,4.135,3.364,7.5,7.5,7.5h12.912c4.136,0,7.5-3.365,7.5-7.5V105.917c0-1.378,1.121-2.5,2.5-2.5h191.268c1.379,0,2.5,1.122,2.5,2.5v135.888c0,4.135,3.364,7.5,7.5,7.5h12.913c4.136,0,7.5-3.365,7.5-7.5V81.223C252.094,77.556,249.708,73.392,246.545,71.538z"/>
+              <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z"/>
           </svg>
-          <span>ARAÇLAR</span>
+            Araçlar
         </button>
       </div>
     </div>
 
-    <!-- Gönderiler Tab İçeriği -->
+      <!-- Tab Contents -->
+      <div class="glass-card rounded-b-2xl rounded-t-none p-6">
+        <!-- Posts Tab -->
     <div id="tab-posts-content" class="profile-tab-content">
-      <div id="userPostsContainer" class="grid grid-cols-3 gap-1 md:gap-2">
-        <!-- Kullanıcı gönderileri buraya yüklenecek -->
+          <div id="userPostsContainer" class="grid grid-cols-3 gap-1">
+            <!-- Posts will be loaded here -->
       </div>
       <div id="noPostsMessage" class="hidden text-center py-20">
-        <div class="max-w-md mx-auto">
           <svg class="w-20 h-20 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
           <h4 class="text-lg font-semibold text-white mb-1">Henüz Gönderi Yok</h4>
-          <p class="text-sm text-gray-400">Bu kullanıcı henüz gönderi paylaşmamış</p>
-        </div>
+            <p class="text-sm text-gray-400">İlk gönderini paylaş</p>
       </div>
     </div>
 
-    <!-- Araçlar Tab İçeriği -->
+        <!-- Cars Tab -->
     <div id="tab-cars-content" class="profile-tab-content hidden">
-      <div id="carsContainer" class="space-y-6">
-        <!-- Arabalar buraya yüklenecek -->
+          <div id="carsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+            <!-- Cars will be loaded here -->
       </div>
       <div id="noCarsMessage" class="hidden text-center py-20">
-        <div class="max-w-md mx-auto">
           <svg class="w-20 h-20 text-gray-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 252.094 252.094">
-            <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z M70.352,159.384l10.161-24.754c2.089-5.088,8.298-9.251,13.798-9.251h63.363c5.5,0,11.709,4.163,13.798,9.251l10.161,24.754c2.089,5.088-0.702,9.251-6.202,9.251H76.554C71.054,168.635,68.263,164.472,70.352,159.384z M97.292,199.635c0,2.75-2.25,5-5,5H71.554c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.738c2.75,0,5,2.25,5,5V199.635z M185.203,199.635c0,2.75-2.25,5-5,5h-20.736c-2.75,0-5-2.25-5-5v-8.271c0-2.75,2.25-5,5-5h20.736c2.75,0,5,2.25,5,5V199.635z"/>
-            <path d="M246.545,71.538L131.625,4.175c-1.525-0.894-3.506-1.386-5.578-1.386c-2.072,0-4.053,0.492-5.578,1.386L5.549,71.538C2.386,73.392,0,77.556,0,81.223v160.582c0,4.135,3.364,7.5,7.5,7.5h12.912c4.136,0,7.5-3.365,7.5-7.5V105.917c0-1.378,1.121-2.5,2.5-2.5h191.268c1.379,0,2.5,1.122,2.5,2.5v135.888c0,4.135,3.364,7.5,7.5,7.5h12.913c4.136,0,7.5-3.365,7.5-7.5V81.223C252.094,77.556,249.708,73.392,246.545,71.538z"/>
+              <path d="M196.979,146.785c-1.091,0-2.214,0.157-3.338,0.467l-4.228,1.165l-6.229-15.173c-3.492-8.506-13.814-15.426-23.01-15.426H91.808c-9.195,0-19.518,6.921-23.009,15.427l-6.218,15.145l-4.127-1.137c-1.124-0.31-2.247-0.467-3.338-0.467c-5.485,0-9.467,3.935-9.467,9.356c0,5.352,3.906,9.858,9.2,11.211c-2.903,8.017-5.159,20.034-5.159,27.929v32.287c0,6.893,5.607,12.5,12.5,12.5h4.583c6.893,0,12.5-5.607,12.5-12.5v-6.04h93.435v6.04c0,6.893,5.607,12.5,12.5,12.5h4.585c6.893,0,12.5-5.607,12.5-12.5v-32.287c0-7.887-2.252-19.888-5.15-27.905c5.346-1.32,9.303-5.85,9.303-11.235C206.445,150.72,202.464,146.785,196.979,146.785z"/>
           </svg>
-          <h4 class="text-lg font-semibold text-white mb-1">Henüz Araç Eklenmemiş</h4>
-          <p class="text-sm text-gray-400 mb-4">Garajınızı doldurmak için ilk aracınızı ekleyin</p>
-          <button onclick="openAddCarModal()" id="addFirstCarBtn" class="hidden px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition">
-            İlk Aracını Ekle
+            <h4 class="text-lg font-semibold text-white mb-1">Henüz Araç Yok</h4>
+            <p class="text-sm text-gray-400 mb-4">Garajını doldurmak için ilk aracını ekle</p>
+            <button onclick="openAddCarModal()" id="addFirstCarBtn" class="hidden inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-lg text-white font-bold transition shadow-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+              İlk Aracını Ekle
           </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Araç Detay Modalı -->
-  <div id="carDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm p-4">
-    <div class="bg-neutral-900 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border border-gray-700 flex flex-col">
-      <!-- Header -->
-      <div class="flex items-center justify-between p-6 border-b border-gray-700">
-        <h3 class="text-2xl font-bold text-white" id="carDetailTitle">Araç Detayları</h3>
-        <button onclick="closeCarDetailModal()" class="text-gray-400 hover:text-white transition">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <!-- Content -->
-      <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Sol Taraf - Resim -->
-          <div class="space-y-4">
-            <div class="aspect-square bg-neutral-800 rounded-xl overflow-hidden border border-gray-700">
-              <img id="carDetailImage" src="" alt="Araç Resmi" class="w-full h-full object-cover">
-            </div>
-            <div id="carDetailActions" class="flex gap-3">
-              <!-- Butonlar buraya eklenecek -->
-            </div>
-          </div>
-          
-          <!-- Sağ Taraf - Bilgiler -->
-          <div class="space-y-6">
-          <div>
-              <h4 class="text-3xl font-bold text-white mb-2" id="carDetailName">-</h4>
-              <div class="flex items-center gap-2">
-                <span id="carDetailYear" class="text-gray-400 text-lg"></span>
-                <span id="carDetailFeatured" class="hidden px-3 py-1 bg-red-600 text-white text-xs font-semibold rounded-full">⭐ Öne Çıkan</span>
-          </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-              <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-                <p class="text-gray-400 text-sm mb-1">Marka</p>
-                <p class="text-white font-semibold" id="carDetailBrand">-</p>
-              </div>
-              <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-                <p class="text-gray-400 text-sm mb-1">Model</p>
-                <p class="text-white font-semibold" id="carDetailModel">-</p>
-              </div>
-              <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-                <p class="text-gray-400 text-sm mb-1">Yıl</p>
-                <p class="text-white font-semibold" id="carDetailYearInfo">-</p>
-              </div>
-              <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-                <p class="text-gray-400 text-sm mb-1">Renk</p>
-                <p class="text-white font-semibold" id="carDetailColor">-</p>
-              </div>
-              <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-                <p class="text-gray-400 text-sm mb-1">Motor</p>
-                <p class="text-white font-semibold" id="carDetailEngine">-</p>
-              </div>
-              <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-                <p class="text-gray-400 text-sm mb-1">Beygir Gücü</p>
-                <p class="text-white font-semibold" id="carDetailHorsepower">-</p>
-              </div>
-            </div>
-            
-            <div class="bg-neutral-800 rounded-lg p-4 border border-gray-700">
-              <p class="text-gray-400 text-sm mb-2">Açıklama</p>
-              <p class="text-white whitespace-pre-line" id="carDetailDescription">-</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-
-  <!-- Tam Sayfa Universal Modal -->
-  <div id="universalModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-90">
-    <div class="w-full h-full flex flex-col">
-      <!-- Header -->
-      <div class="flex items-center justify-between p-6 border-b border-gray-700 bg-neutral-900">
-        <div class="flex items-center gap-4">
-          <h2 class="text-2xl font-bold text-white" id="universalModalTitle">Modal</h2>
-          <div class="flex gap-2" id="modalTabs">
-            <button onclick="switchModalTab('profile')" class="modal-tab px-4 py-2 rounded-lg text-sm font-medium transition" data-tab="profile">
-              Profil Düzenle
-            </button>
-            <button onclick="switchModalTab('car')" class="modal-tab px-4 py-2 rounded-lg text-sm font-medium transition" data-tab="car">
-              Araba
-            </button>
-            <button onclick="switchModalTab('post')" class="modal-tab px-4 py-2 rounded-lg text-sm font-medium transition" data-tab="post">
-              Gönderi
-            </button>
-          </div>
-        </div>
-        <button onclick="closeUniversalModal()" class="text-gray-400 hover:text-white transition">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
       </div>
-      
-      <!-- Content Area -->
-      <div class="flex-1 overflow-y-auto bg-neutral-900">
-        <div class="max-w-4xl mx-auto p-6">
-          <!-- Profil Düzenleme Tab -->
-          <div id="tab-profile" class="modal-tab-content hidden">
-            <form id="editProfileForm" class="space-y-6" onsubmit="event.preventDefault(); updateProfile();">
-              <!-- Profil Fotoğrafı -->
-          <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Profil Fotoğrafı</label>
-                <div class="flex items-center space-x-4">
-                  <img id="profilePicturePreview" src="" alt="Önizleme" class="hidden w-24 h-24 rounded-full object-cover border-2 border-red-600">
-                  <input 
-                    type="file" 
-                    name="profile_picture" 
-                    accept="image/jpeg,image/png,image/gif,image/webp"
-                    onchange="previewProfilePicture(this)"
-                    class="flex-1 px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
-                  />
-          </div>
-                <p class="text-gray-500 text-xs mt-1">JPEG, PNG, GIF veya WebP (Maks. 5MB)</p>
-              </div>
-              
-              <!-- Ad Soyad -->
-          <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Ad Soyad</label>
-                <input 
-                  type="text" 
-                  name="full_name" 
-                  id="editFullName"
-                  class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                  placeholder="Ad Soyad"
-                />
-          </div>
-              
-              <!-- Biyografi -->
-          <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Biyografi</label>
-                <textarea 
-                  name="bio" 
-                  id="editBio"
-                  rows="6"
-                  class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-                  placeholder="Kendiniz hakkında bir şeyler yazın..."
-                ></textarea>
-        </div>
-              
-              <div id="editProfileError" class="text-red-500 text-sm hidden"></div>
-              
-              <div class="flex space-x-3 pt-4">
-                <button 
-                  type="button"
-                  onclick="closeUniversalModal()"
-                  class="flex-1 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-                >
-                  İptal
-                </button>
-                <button 
-                  type="submit"
-                  class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-                >
-                  Kaydet
-                </button>
-      </div>
-            </form>
-    </div>
+  </main>
 
-          <!-- Araba Ekleme/Düzenleme Tab -->
-          <div id="tab-car" class="modal-tab-content hidden">
-            <form id="carForm" class="space-y-6" onsubmit="event.preventDefault(); saveCar();">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Marka -->
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Marka *</label>
-                  <input 
-                    type="text" 
-                    name="brand" 
-                    id="carBrand"
-                    required
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: BMW"
-                  />
-      </div>
-
-                <!-- Model -->
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Model *</label>
-                  <input 
-                    type="text" 
-                    name="model" 
-                    id="carModel"
-                    required
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: M3"
-                  />
-    </div>
-                
-                <!-- Yıl -->
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Yıl</label>
-                  <input 
-                    type="number" 
-                    name="year" 
-                    id="carYear"
-                    min="1900"
-                    max="2030"
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: 2020"
-                  />
-    </div>
-                
-                <!-- Renk -->
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Renk</label>
-                  <input 
-                    type="text" 
-                    name="color" 
-                    id="carColor"
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: Kırmızı"
-                  />
-                </div>
-                
-                <!-- Motor -->
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Motor</label>
-                  <input 
-                    type="text" 
-                    name="engine" 
-                    id="carEngine"
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: 3.0L V6"
-                  />
-                </div>
-                
-                <!-- Beygir Gücü -->
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Beygir Gücü (HP)</label>
-                  <input 
-                    type="number" 
-                    name="horsepower" 
-                    id="carHorsepower"
-                    min="0"
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: 450"
-                  />
-                </div>
-              </div>
-              
-              <!-- Açıklama -->
-              <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Açıklama</label>
-                <textarea 
-                  name="description" 
-                  id="carDescription"
-                  rows="6"
-                  class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-                  placeholder="Arabanız hakkında detaylar..."
-                ></textarea>
-              </div>
-              
-              <!-- Resim -->
-              <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Araba Fotoğrafı</label>
-                <div class="flex items-center space-x-4">
-                  <img id="carImagePreview" src="" alt="Önizleme" class="hidden w-40 h-40 rounded-lg object-cover border-2 border-red-600">
-                  <input 
-                    type="file" 
-                    name="image" 
-                    id="carImage"
-                    accept="image/jpeg,image/png,image/gif,image/webp"
-                    onchange="previewCarImage(this)"
-                    class="flex-1 px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
-                  />
-                </div>
-                <p class="text-gray-500 text-xs mt-1">JPEG, PNG, GIF veya WebP (Maks. 5MB)</p>
-              </div>
-              
-              <!-- Öne Çıkar -->
-              <div class="flex items-center">
-                <input 
-                  type="checkbox" 
-                  name="is_featured" 
-                  id="carFeatured"
-                  class="w-5 h-5 text-red-600 bg-neutral-800 border-gray-600 rounded focus:ring-red-600"
-                />
-                <label for="carFeatured" class="ml-3 text-gray-300 text-lg">Öne Çıkar (Vitrinde üstte göster)</label>
-              </div>
-              
-              <input type="hidden" id="carId" value="">
-              
-              <div id="carError" class="text-red-500 text-sm hidden"></div>
-              
-              <div class="flex space-x-3 pt-4">
-                <button 
-                  type="button"
-                  onclick="closeUniversalModal()"
-                  class="flex-1 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-                >
-                  İptal
-                </button>
-                <button 
-                  type="submit"
-                  class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-                >
-                  <span id="carSubmitText">Kaydet</span>
-                </button>
-              </div>
-            </form>
+  <!-- Universal Modal Placeholder -->
+  <div id="universalModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm">
+    <!-- Modal content will be added by JavaScript -->
           </div>
           
-          <!-- Gönderi Ekleme/Düzenleme Tab -->
-          <div id="tab-post" class="modal-tab-content hidden">
-            <form id="createPostForm" class="space-y-6" onsubmit="event.preventDefault(); handlePostSubmit();">
-              <input type="hidden" id="postId" value="">
-              
-              <!-- Fotoğraf Yükleme -->
-              <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Fotoğraf *</label>
-                <div class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-                  <input 
-                    type="file" 
-                    name="image" 
-                    id="postImageInput"
-                    accept="image/jpeg,image/png,image/gif,image/webp"
-                    onchange="previewPostImage(this)"
-                    class="hidden"
-                  />
-                  <div id="imagePreviewContainer" class="hidden mb-4">
-                    <img id="imagePreview" src="" alt="Önizleme" class="max-w-full max-h-96 mx-auto rounded-lg">
-                  </div>
-                  <button 
-                    type="button"
-                    onclick="document.getElementById('postImageInput').click()"
-                    class="px-6 py-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-white font-medium transition"
-                  >
-                    Fotoğraf Seç
-                  </button>
-                  <p class="text-gray-500 text-xs mt-2">JPEG, PNG, GIF veya WebP (Maks. 10MB)</p>
-                </div>
-              </div>
-              
-              <!-- Başlık -->
-              <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Başlık *</label>
-                <input 
-                  type="text" 
-                  name="title" 
-                  id="postTitle"
-                  required
-                  class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                  placeholder="Gönderi başlığı"
-                />
-              </div>
-              
-              <!-- Açıklama -->
-              <div>
-                <label class="block text-gray-300 mb-2 text-lg font-semibold">Açıklama</label>
-                <textarea 
-                  name="description" 
-                  id="postDescription"
-                  rows="6"
-                  class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-                  placeholder="Gönderi açıklaması..."
-                ></textarea>
-              </div>
-              
-              <!-- Araba Bilgileri -->
-              <div class="grid grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Marka</label>
-                  <input 
-                    type="text" 
-                    name="car_brand" 
-                    id="postCarBrand"
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: BMW"
-                  />
-                </div>
-                <div>
-                  <label class="block text-gray-300 mb-2 text-lg font-semibold">Model</label>
-                  <input 
-                    type="text" 
-                    name="car_model" 
-                    id="postCarModel"
-                    class="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-                    placeholder="Örn: M3"
-                  />
-                </div>
-              </div>
-              
-              <div id="createPostError" class="text-red-500 text-sm hidden"></div>
-              
-              <div class="flex space-x-3 pt-4">
-                <button 
-                  type="button"
-                  onclick="closeUniversalModal()"
-                  class="flex-1 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-                >
-                  İptal
-                </button>
-                <button 
-                  type="submit"
-                  class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-                >
-                  <span id="postSubmitText">Paylaş</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Eski Modallar (Geriye dönük uyumluluk için gizli) -->
-  <div id="editProfileModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-    <div class="bg-neutral-900 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-700 m-4">
-      <div class="flex items-center justify-between p-4 border-b border-gray-700">
-        <h3 class="text-xl font-bold text-white">Profil Düzenle</h3>
-        <button onclick="closeEditProfileModal()" class="text-gray-400 hover:text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <form id="editProfileForm" class="p-6 space-y-4" onsubmit="event.preventDefault(); updateProfile();">
-        <!-- Profil Fotoğrafı -->
-        <div>
-          <label class="block text-gray-300 mb-2">Profil Fotoğrafı</label>
-          <div class="flex items-center space-x-4">
-            <img id="profilePicturePreview" src="" alt="Önizleme" class="hidden w-20 h-20 rounded-full object-cover border-2 border-red-600">
-            <input 
-              type="file" 
-              name="profile_picture" 
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              onchange="previewProfilePicture(this)"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
-            />
-          </div>
-          <p class="text-gray-500 text-xs mt-1">JPEG, PNG, GIF veya WebP (Maks. 5MB)</p>
-        </div>
-        
-        <!-- Ad Soyad -->
-        <div>
-          <label class="block text-gray-300 mb-2">Ad Soyad</label>
-          <input 
-            type="text" 
-            name="full_name" 
-            id="editFullName"
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-            placeholder="Ad Soyad"
-          />
-        </div>
-        
-        <!-- Biyografi -->
-        <div>
-          <label class="block text-gray-300 mb-2">Biyografi</label>
-          <textarea 
-            name="bio" 
-            id="editBio"
-            rows="4"
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-            placeholder="Kendiniz hakkında bir şeyler yazın..."
-          ></textarea>
-        </div>
-        
-        <div id="editProfileError" class="text-red-500 text-sm hidden"></div>
-        
-        <div class="flex space-x-3 pt-4">
-          <button 
-            type="button"
-            onclick="closeEditProfileModal()"
-            class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-          >
-            İptal
-          </button>
-          <button 
-            type="submit"
-            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-          >
-            Kaydet
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Yeni Gönderi Modal -->
-  <div id="createPostModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-    <div class="bg-neutral-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700 m-4">
-      <div class="flex items-center justify-between p-4 border-b border-gray-700">
-        <h3 class="text-xl font-bold text-white">Yeni Gönderi Oluştur</h3>
-        <button onclick="closeCreatePostModal()" class="text-gray-400 hover:text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <form id="createPostForm" class="p-6 space-y-4" onsubmit="event.preventDefault(); createPost();">
-        <!-- Fotoğraf Yükleme -->
-        <div>
-          <label class="block text-gray-300 mb-2">Fotoğraf</label>
-          <div class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-            <input 
-              type="file" 
-              name="image" 
-              id="postImageInput"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              onchange="previewPostImage(this)"
-              class="hidden"
-              required
-            />
-            <div id="imagePreviewContainer" class="hidden mb-4">
-              <img id="imagePreview" src="" alt="Önizleme" class="max-w-full max-h-96 mx-auto rounded-lg">
-            </div>
-            <button 
-              type="button"
-              onclick="document.getElementById('postImageInput').click()"
-              class="px-6 py-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-white font-medium transition"
-            >
-              Fotoğraf Seç
-            </button>
-            <p class="text-gray-500 text-xs mt-2">JPEG, PNG, GIF veya WebP (Maks. 10MB)</p>
-          </div>
-        </div>
-        
-        <!-- Başlık -->
-        <div>
-          <label class="block text-gray-300 mb-2">Başlık *</label>
-          <input 
-            type="text" 
-            name="title" 
-            id="postTitle"
-            required
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-            placeholder="Gönderi başlığı"
-          />
-        </div>
-        
-        <!-- Açıklama -->
-        <div>
-          <label class="block text-gray-300 mb-2">Açıklama</label>
-          <textarea 
-            name="description" 
-            id="postDescription"
-            rows="4"
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-            placeholder="Gönderi açıklaması..."
-          ></textarea>
-        </div>
-        
-        <!-- Araba Bilgileri -->
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-gray-300 mb-2">Marka</label>
-            <input 
-              type="text" 
-              name="car_brand" 
-              id="postCarBrand"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: BMW"
-            />
-          </div>
-          <div>
-            <label class="block text-gray-300 mb-2">Model</label>
-            <input 
-              type="text" 
-              name="car_model" 
-              id="postCarModel"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: M3"
-            />
-          </div>
-        </div>
-        
-        <div id="createPostError" class="text-red-500 text-sm hidden"></div>
-        
-        <div class="flex space-x-3 pt-4">
-          <button 
-            type="button"
-            onclick="closeCreatePostModal()"
-            class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-          >
-            İptal
-          </button>
-          <button 
-            type="submit"
-            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-          >
-            Paylaş
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Gönderi Düzenleme Modal -->
-  <div id="editPostModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-    <div class="bg-neutral-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700 m-4">
-      <div class="flex items-center justify-between p-4 border-b border-gray-700">
-        <h3 class="text-xl font-bold text-white">Gönderiyi Düzenle</h3>
-        <button onclick="closeEditPostModal()" class="text-gray-400 hover:text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <form id="editPostForm" class="p-6 space-y-4" onsubmit="event.preventDefault(); updatePost();">
-        <input type="hidden" id="editPostId" value="">
-        
-        <!-- Fotoğraf Yükleme -->
-        <div>
-          <label class="block text-gray-300 mb-2">Fotoğraf (Değiştirmek için yeni fotoğraf seçin)</label>
-          <div class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-            <input 
-              type="file" 
-              name="image" 
-              id="editPostImageInput"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              onchange="previewEditPostImage(this)"
-              class="hidden"
-            />
-            <div id="editImagePreviewContainer" class="hidden mb-4">
-              <img id="editImagePreview" src="" alt="Önizleme" class="max-w-full max-h-96 mx-auto rounded-lg">
-            </div>
-            <button 
-              type="button"
-              onclick="document.getElementById('editPostImageInput').click()"
-              class="px-6 py-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-white font-medium transition"
-            >
-              Yeni Fotoğraf Seç
-            </button>
-            <p class="text-gray-500 text-xs mt-2">JPEG, PNG, GIF veya WebP (Maks. 10MB)</p>
-          </div>
-        </div>
-        
-        <!-- Başlık -->
-        <div>
-          <label class="block text-gray-300 mb-2">Başlık *</label>
-          <input 
-            type="text" 
-            name="title" 
-            id="editPostTitle"
-            required
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-            placeholder="Gönderi başlığı"
-          />
-        </div>
-        
-        <!-- Açıklama -->
-        <div>
-          <label class="block text-gray-300 mb-2">Açıklama</label>
-          <textarea 
-            name="description" 
-            id="editPostDescription"
-            rows="4"
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-            placeholder="Gönderi açıklaması..."
-          ></textarea>
-        </div>
-        
-        <!-- Araba Bilgileri -->
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-gray-300 mb-2">Marka</label>
-            <input 
-              type="text" 
-              name="car_brand" 
-              id="editPostCarBrand"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: BMW"
-            />
-          </div>
-          <div>
-            <label class="block text-gray-300 mb-2">Model</label>
-            <input 
-              type="text" 
-              name="car_model" 
-              id="editPostCarModel"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: M3"
-            />
-          </div>
-        </div>
-        
-        <div id="editPostError" class="text-red-500 text-sm hidden"></div>
-        
-        <div class="flex space-x-3 pt-4">
-          <button 
-            type="button"
-            onclick="closeEditPostModal()"
-            class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-          >
-            İptal
-          </button>
-          <button 
-            type="submit"
-            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-          >
-            Güncelle
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script src="js/touch-events.js"></script>
-  <script src="js/session.js"></script>
-  <!-- Mesajlaşma Modal (Belirli bir kullanıcıyla) -->
-  <div id="messageModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[70] hidden" style="z-index: 70;">
-    <div class="flex flex-col h-full max-w-2xl mx-auto bg-black/95 border border-red-700/50">
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between p-4 border-b border-red-700/50">
-        <div class="flex items-center space-x-3">
-          <img id="messageUserPic" src="" alt="" class="w-10 h-10 rounded-full object-cover">
-          <div>
-            <h3 id="messageUserName" class="text-white font-semibold"></h3>
-            <p class="text-xs text-gray-400">Aktif</p>
-          </div>
-        </div>
-        <button onclick="closeMessageModal()" class="p-2 rounded-lg hover:bg-red-600/20 transition">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <!-- Mesajlar -->
-      <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3">
-        <!-- Mesajlar buraya yüklenecek -->
-      </div>
-      
-      <!-- Mesaj Gönderme Formu -->
-      <div class="p-4 border-t border-red-700/50">
-        <form id="sendMessageForm" onsubmit="sendMessage(event)" class="flex items-center space-x-2">
-          <input 
-            type="text" 
-            id="messageInput" 
-            placeholder="Mesaj yazın..." 
-            class="flex-1 px-4 py-2 bg-neutral-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-red-600"
-            required
-          >
-          <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition">
-            Gönder
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  </div> <!-- pageContent -->
-  <!-- Araba Ekleme/Düzenleme Modal -->
-  <div id="carModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-    <div class="bg-neutral-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-700 m-4">
-      <div class="flex items-center justify-between p-4 border-b border-gray-700 sticky top-0 bg-neutral-900">
-        <h3 class="text-xl font-bold text-white" id="carModalTitle">Araba Ekle</h3>
-        <button onclick="closeCarModal()" class="text-gray-400 hover:text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-      
-      <form id="carForm" class="p-6 space-y-4" onsubmit="event.preventDefault(); saveCar();">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Marka -->
-          <div>
-            <label class="block text-gray-300 mb-2">Marka *</label>
-            <input 
-              type="text" 
-              name="brand" 
-              id="carBrand"
-              required
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: BMW"
-            />
+  <!-- Car Detail Modal Placeholder -->
+  <div id="carDetailModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm">
+    <!-- Modal content will be added by JavaScript -->
           </div>
           
-          <!-- Model -->
-          <div>
-            <label class="block text-gray-300 mb-2">Model *</label>
-            <input 
-              type="text" 
-              name="model" 
-              id="carModel"
-              required
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: M3"
-            />
-          </div>
-          
-          <!-- Yıl -->
-          <div>
-            <label class="block text-gray-300 mb-2">Yıl</label>
-            <input 
-              type="number" 
-              name="year" 
-              id="carYear"
-              min="1900"
-              max="2030"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: 2020"
-            />
-          </div>
-          
-          <!-- Renk -->
-          <div>
-            <label class="block text-gray-300 mb-2">Renk</label>
-            <input 
-              type="text" 
-              name="color" 
-              id="carColor"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: Kırmızı"
-            />
-          </div>
-          
-          <!-- Motor -->
-          <div>
-            <label class="block text-gray-300 mb-2">Motor</label>
-            <input 
-              type="text" 
-              name="engine" 
-              id="carEngine"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: 3.0L V6"
-            />
-          </div>
-          
-          <!-- Beygir Gücü -->
-          <div>
-            <label class="block text-gray-300 mb-2">Beygir Gücü (HP)</label>
-            <input 
-              type="number" 
-              name="horsepower" 
-              id="carHorsepower"
-              min="0"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600"
-              placeholder="Örn: 450"
-            />
-          </div>
-        </div>
-        
-        <!-- Açıklama -->
-        <div>
-          <label class="block text-gray-300 mb-2">Açıklama</label>
-          <textarea 
-            name="description" 
-            id="carDescription"
-            rows="4"
-            class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-            placeholder="Arabanız hakkında detaylar..."
-          ></textarea>
-        </div>
-        
-        <!-- Resim -->
-        <div>
-          <label class="block text-gray-300 mb-2">Araba Fotoğrafı</label>
-          <div class="flex items-center space-x-4">
-            <img id="carImagePreview" src="" alt="Önizleme" class="hidden w-32 h-32 rounded-lg object-cover border-2 border-red-600">
-            <input 
-              type="file" 
-              name="image" 
-              id="carImage"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              onchange="previewCarImage(this)"
-              class="w-full px-4 py-2 rounded-lg bg-neutral-800 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
-            />
-          </div>
-          <p class="text-gray-500 text-xs mt-1">JPEG, PNG, GIF veya WebP (Maks. 5MB)</p>
-        </div>
-        
-        <!-- Öne Çıkar -->
-        <div class="flex items-center">
-          <input 
-            type="checkbox" 
-            name="is_featured" 
-            id="carFeatured"
-            class="w-4 h-4 text-red-600 bg-neutral-800 border-gray-600 rounded focus:ring-red-600"
-          />
-          <label for="carFeatured" class="ml-2 text-gray-300">Öne Çıkar (Vitrinde üstte göster)</label>
-        </div>
-        
-        <input type="hidden" id="carId" value="">
-        
-        <div id="carError" class="text-red-500 text-sm hidden"></div>
-        
-        <div class="flex space-x-3 pt-4">
-          <button 
-            type="button"
-            onclick="closeCarModal()"
-            class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-medium transition"
-          >
-            İptal
-          </button>
-          <button 
-            type="submit"
-            class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-medium transition"
-          >
-            <span id="carSubmitText">Kaydet</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+  </div> <!-- pageContent kapatma -->
 
-  <script src="js/profile.js"></script>
-  <script src="js/messages.js"></script>
-  <script src="js/cars.js"></script>
-  <script src="js/search.js"></script>
-  <script src="js/main.js"></script>
+  <!-- Scripts -->
   <script>
-    // Tab geçiş fonksiyonunu global olarak tanımla (yedek)
-    if (typeof switchProfileTab === 'undefined') {
-      function switchProfileTab(tabName) {
-        const postsTab = document.getElementById('tab-posts-btn');
-        const carsTab = document.getElementById('tab-cars-btn');
-        const postsContent = document.getElementById('tab-posts-content');
-        const carsContent = document.getElementById('tab-cars-content');
-        
-        // Tüm tabları ve içerikleri sıfırla
-        if (postsTab) {
-          postsTab.classList.remove('active', 'text-white', 'border-white');
-          postsTab.classList.add('text-gray-400', 'border-transparent');
-        }
-        if (carsTab) {
-          carsTab.classList.remove('active', 'text-white', 'border-white');
-          carsTab.classList.add('text-gray-400', 'border-transparent');
-        }
-        if (postsContent) postsContent.classList.add('hidden');
-        if (carsContent) carsContent.classList.add('hidden');
-        
-        // Seçilen tabı aktif yap
-        if (tabName === 'posts') {
-          if (postsTab) {
-            postsTab.classList.add('active', 'text-white', 'border-white');
-            postsTab.classList.remove('text-gray-400', 'border-transparent');
-          }
-          if (postsContent) postsContent.classList.remove('hidden');
-        } else if (tabName === 'cars') {
-          if (carsTab) {
-            carsTab.classList.add('active', 'text-white', 'border-white');
-            carsTab.classList.remove('text-gray-400', 'border-transparent');
-          }
-          if (carsContent) {
-            carsContent.classList.remove('hidden');
-            // Arabaları yükle
-            setTimeout(() => {
-              if (typeof window.loadUserCars === 'function') {
-                window.loadUserCars();
-              } else if (typeof window.loadCars === 'function') {
-                window.loadCars();
-              }
-            }, 100);
-          }
-        }
-      }
-      window.switchProfileTab = switchProfileTab;
-    }
-    
-    // Universal Modal Functions
-    let currentModalTab = 'profile';
-    
-    function openUniversalModal(tab = 'profile') {
-      const modal = document.getElementById('universalModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        switchModalTab(tab);
-        document.body.style.overflow = 'hidden';
-      }
-    }
-    
-    function closeUniversalModal() {
-      const modal = document.getElementById('universalModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-        resetAllForms();
-      }
-    }
-    
-    function switchModalTab(tab) {
-      currentModalTab = tab;
-      
-      document.querySelectorAll('.modal-tab-content').forEach(content => {
-        content.classList.add('hidden');
-      });
-      
-      document.querySelectorAll('.modal-tab').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      const tabContent = document.getElementById(`tab-${tab}`);
-      const tabButton = document.querySelector(`[data-tab="${tab}"]`);
-      
-      if (tabContent) {
-        tabContent.classList.remove('hidden');
-      }
-      
-      if (tabButton) {
-        tabButton.classList.add('active');
-      }
-      
-      const title = document.getElementById('universalModalTitle');
-      if (title) {
-        const titles = {
-          'profile': 'Profil Düzenle',
-          'car': 'Araba Ekle/Düzenle',
-          'post': 'Gönderi Oluştur'
-        };
-        title.textContent = titles[tab] || 'Modal';
-      }
-    }
-    
-    function resetAllForms() {
-      const profileForm = document.getElementById('editProfileForm');
-      if (profileForm) profileForm.reset();
-      
-      const carForm = document.getElementById('carForm');
-      if (carForm) {
-        carForm.reset();
-        const carId = document.getElementById('carId');
-        if (carId) carId.value = '';
-        const carImagePreview = document.getElementById('carImagePreview');
-        if (carImagePreview) carImagePreview.classList.add('hidden');
-        const carSubmitText = document.getElementById('carSubmitText');
-        if (carSubmitText) carSubmitText.textContent = 'Kaydet';
-      }
-      
-      const postForm = document.getElementById('createPostForm');
-      if (postForm) {
-        postForm.reset();
-        const postId = document.getElementById('postId');
-        if (postId) postId.value = '';
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        if (imagePreviewContainer) imagePreviewContainer.classList.add('hidden');
-        const postSubmitText = document.getElementById('postSubmitText');
-        if (postSubmitText) postSubmitText.textContent = 'Paylaş';
-      }
-    }
-    
-    function handlePostSubmit() {
-      const postId = document.getElementById('postId')?.value;
-      if (postId) {
-        if (typeof updatePost === 'function') {
-          updatePost();
-        }
-      } else {
-        if (typeof createPost === 'function') {
-          createPost();
-        }
-      }
-    }
-    
-    // Eski modal fonksiyonlarını yeni modal'a yönlendir
-    function openEditProfileModal() {
-      openUniversalModal('profile');
-    }
-    
-    function closeEditProfileModal() {
-      closeUniversalModal();
-    }
-    
-    function openCreatePostModal() {
-      openUniversalModal('post');
-      const form = document.getElementById('createPostForm');
-      if (form) {
-        form.reset();
-        const postId = document.getElementById('postId');
-        if (postId) postId.value = '';
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        if (imagePreviewContainer) imagePreviewContainer.classList.add('hidden');
-        const postSubmitText = document.getElementById('postSubmitText');
-        if (postSubmitText) postSubmitText.textContent = 'Paylaş';
-      }
-    }
-    
-    function closeCreatePostModal() {
-      closeUniversalModal();
-    }
-    
-    function openAddCarModal() {
-      openUniversalModal('car');
-      const form = document.getElementById('carForm');
-      const submitText = document.getElementById('carSubmitText');
-      if (form && submitText) {
-        submitText.textContent = 'Kaydet';
-        form.reset();
-        const carId = document.getElementById('carId');
-        if (carId) carId.value = '';
-        const carImagePreview = document.getElementById('carImagePreview');
-        if (carImagePreview) carImagePreview.classList.add('hidden');
-        const carError = document.getElementById('carError');
-        if (carError) carError.classList.add('hidden');
-      }
-    }
-    
-    function closeCarModal() {
-      closeUniversalModal();
-    }
-    
-    // ESC tuşu ile modal'ı kapat
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const universalModal = document.getElementById('universalModal');
-        const carDetailModal = document.getElementById('carDetailModal');
-        
-        if (universalModal && !universalModal.classList.contains('hidden')) {
-          closeUniversalModal();
-        }
-        if (carDetailModal && !carDetailModal.classList.contains('hidden')) {
-          if (typeof closeCarDetailModal === 'function') {
-            closeCarDetailModal();
-          }
-        }
-      }
-    });
-    
-    // Modal dışına tıklanınca kapat
-    document.addEventListener('DOMContentLoaded', function() {
-      const modal = document.getElementById('universalModal');
-      if (modal) {
-        modal.addEventListener('click', function(e) {
-          if (e.target === this) {
-            closeUniversalModal();
-          }
-        });
-      }
-    });
-    
-    // Sayfa yüklendiğinde scroll'u aktif et
-    document.addEventListener('DOMContentLoaded', function() {
-      document.body.style.overflowY = 'auto';
-    });
-    
-    // Garajı aç butonu fonksiyonu
+    // Garaj Kepengi Açma
     function openGarage() {
       const overlay = document.getElementById('garageDoorOverlay');
       const button = document.getElementById('garageOpenButton');
       
       if (overlay && !overlay.classList.contains('opening')) {
+        // Butonu gizle
         if (button) {
-          button.style.display = 'none';
+          button.style.opacity = '0';
+          button.style.transition = 'opacity 0.3s';
+          setTimeout(() => {
+            button.style.display = 'none';
+          }, 300);
         }
+        
+        // Scroll'u etkinleştir
         document.body.style.overflowY = 'auto';
+        
+        // Animasyonu başlat
         overlay.classList.add('opening');
-        overlay.remove();
+        
+        // Animasyon bitince overlay'i kaldır
+            setTimeout(() => {
+          if (overlay.parentNode) {
+            overlay.remove();
+          }
+        }, 2500);
       }
     }
     
-    // Global fonksiyonlar
-    window.openUniversalModal = openUniversalModal;
-    window.closeUniversalModal = closeUniversalModal;
-    window.switchModalTab = switchModalTab;
-    window.openEditProfileModal = openEditProfileModal;
-    window.closeEditProfileModal = closeEditProfileModal;
-    window.openCreatePostModal = openCreatePostModal;
-    window.closeCreatePostModal = closeCreatePostModal;
-    window.openAddCarModal = openAddCarModal;
-    window.closeCarModal = closeCarModal;
-    window.handlePostSubmit = handlePostSubmit;
+    // Mobile sidebar toggle
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('leftSidebarNav');
+      const overlay = document.getElementById('mobileSidebarOverlay');
+      sidebar.classList.toggle('-translate-x-full');
+      sidebar.classList.toggle('mobile-sidebar-open');
+      overlay.classList.toggle('hidden');
+    }
+
+    // Tab switching
+    function switchProfileTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+      
+      // Update tab contents
+      document.querySelectorAll('.profile-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(`tab-${tabName}-content`).classList.remove('hidden');
+      
+      // Load content if needed
+      if (tabName === 'cars' && typeof window.loadUserCars === 'function') {
+        setTimeout(() => window.loadUserCars(), 100);
+      }
+    }
+
+    // Placeholder functions - Bu fonksiyonlar ayrı JS dosyalarında tanımlanacak
+    // Eğer henüz yüklenmediyse, fallback olarak kullanılır
+    if (typeof openCreatePostModal === 'undefined') {
+      window.openCreatePostModal = function() {
+        console.log('Open create post modal - waiting for main.js to load');
+      };
+    }
+
+    if (typeof openEditProfileModal === 'undefined') {
+      window.openEditProfileModal = function() {
+        console.log('Open edit profile modal - waiting for profile.js to load');
+      };
+    }
+    
+    if (typeof openAddCarModal === 'undefined') {
+      window.openAddCarModal = function() {
+        console.log('Open add car modal - waiting for cars.js to load');
+      };
+    }
+
+    if (typeof toggleFollow === 'undefined') {
+      window.toggleFollow = function() {
+        console.log('Toggle follow - waiting for profile.js to load');
+      };
+    }
+
+    if (typeof openMessageFromProfile === 'undefined') {
+      window.openMessageFromProfile = function() {
+        console.log('Open message - waiting for messages.js to load');
+      };
+    }
+
+    if (typeof openNotificationsModal === 'undefined') {
+      window.openNotificationsModal = function() {
+        console.log('Open notifications - waiting for notifications.js to load');
+      };
+    }
+
+    if (typeof openMessagesModal === 'undefined') {
+      window.openMessagesModal = function() {
+        console.log('Open messages - waiting for messages.js to load');
+      };
+    }
+
+    if (typeof toggleNotifications === 'undefined') {
+      window.toggleNotifications = function() {
+        console.log('Toggle notifications - waiting for notifications.js to load');
+      };
+    }
+
+    if (typeof toggleMessages === 'undefined') {
+      window.toggleMessages = function() {
+        console.log('Toggle messages - waiting for messages.js to load');
+      };
+    }
+
+    // Sayfa yüklendiğinde scroll'u devre dışı bırak (kepenk kapanana kadar)
+    document.body.style.overflow = 'hidden';
   </script>
+
+  <script src="js/touch-events.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/cars.js"></script>
+  <script src="js/messages.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
-
 

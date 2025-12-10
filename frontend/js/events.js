@@ -38,6 +38,47 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Giriş yapılmışsa etkinlikleri yükle
         await loadEvents();
         renderCalendar();
+        
+        // İl filtresi event listener
+        const cityFilter = document.getElementById('cityFilter');
+        const clearCityFilter = document.getElementById('clearCityFilter');
+        
+        if (cityFilter) {
+            cityFilter.addEventListener('change', function() {
+                const selectedCity = this.value;
+                
+                if (selectedCity) {
+                    // Filtrelenmiş etkinlikleri göster
+                    const filteredEvents = events.filter(event => 
+                        event.location && event.location.includes(selectedCity)
+                    );
+                    displayEvents(filteredEvents);
+                    
+                    // Temizle butonunu göster
+                    if (clearCityFilter) {
+                        clearCityFilter.classList.remove('hidden');
+                    }
+                } else {
+                    // Tüm etkinlikleri göster
+                    displayEvents(events);
+                    
+                    // Temizle butonunu gizle
+                    if (clearCityFilter) {
+                        clearCityFilter.classList.add('hidden');
+                    }
+                }
+            });
+        }
+        
+        // Temizle butonu
+        if (clearCityFilter) {
+            clearCityFilter.addEventListener('click', function() {
+                if (cityFilter) {
+                    cityFilter.value = '';
+                    cityFilter.dispatchEvent(new Event('change'));
+                }
+            });
+        }
     } catch (error) {
         console.error('Session kontrolü hatası:', error);
         window.location.href = 'login.html';
@@ -286,10 +327,29 @@ function openEventModal(event) {
                     </div>
                 ` : ''}
                     </div>
-                    <button onclick="registerEvent(${event.id})" 
-                    class="w-full py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition transform hover:scale-105">
-                Etkinliğe Katıl
-            </button>
+                    ${isAdmin ? `
+                        <div class="flex gap-3 mb-4">
+                            <button onclick="closeEventModal(); openAdminPanel(${JSON.stringify(event).replace(/"/g, '&quot;')})" 
+                                    class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition transform hover:scale-105 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Düzenle
+                            </button>
+                            <button onclick="closeEventModal(); deleteEvent(${event.id})" 
+                                    class="flex-1 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition transform hover:scale-105 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                Sil
+                            </button>
+                        </div>
+                    ` : `
+                        <button onclick="registerEvent(${event.id})" 
+                                class="w-full py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition transform hover:scale-105">
+                            Etkinliğe Katıl
+                        </button>
+                    `}
         </div>
     `;
     
@@ -419,17 +479,17 @@ function displayEvents(eventsList) {
                         <div class="mt-auto">
                             ${isAdmin ? `
                                 <div class="flex gap-2">
-                                    <button onclick="event.stopPropagation(); openAdminPanel(${JSON.stringify(nextEvent).replace(/"/g, '&quot;')})" 
+                                    <button onclick="handleEditEvent(event, ${nextEvent.id})" 
                                             class="px-4 py-2 bg-blue-600/90 hover:bg-blue-600 rounded-lg text-white text-xs font-bold transition-all hover:scale-105">
                                         Düzenle
                                     </button>
-                                    <button onclick="event.stopPropagation(); deleteEvent(${nextEvent.id})" 
+                                    <button onclick="handleDeleteEvent(event, ${nextEvent.id})" 
                                             class="px-4 py-2 bg-red-600/90 hover:bg-red-600 rounded-lg text-white text-xs font-bold transition-all hover:scale-105">
                                         Sil
-                    </button>
+                                    </button>
                                 </div>
                             ` : `
-                                <button onclick="event.stopPropagation(); openEventModal(${JSON.stringify(nextEvent).replace(/"/g, '&quot;')})" 
+                                <button onclick="handleViewEvent(event, ${nextEvent.id})" 
                                         class="px-5 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white text-sm font-semibold transition-all hover:scale-105">
                                     Detaylar
                                 </button>
@@ -628,5 +688,27 @@ async function deleteEvent(eventId) {
     } catch (error) {
         console.error('Etkinlik silme hatası:', error);
         alert('Etkinlik silinirken bir hata oluştu');
+    }
+}
+
+// Event handler fonksiyonları - event propagation kontrolü ile
+function handleEditEvent(e, eventId) {
+    e.stopPropagation();
+    const event = events.find(ev => ev.id === eventId);
+    if (event) {
+        openAdminPanel(event);
+    }
+}
+
+function handleDeleteEvent(e, eventId) {
+    e.stopPropagation();
+    deleteEvent(eventId);
+}
+
+function handleViewEvent(e, eventId) {
+    e.stopPropagation();
+    const event = events.find(ev => ev.id === eventId);
+    if (event) {
+        openEventModal(event);
     }
 }

@@ -1,3 +1,61 @@
+// Production Mode: Console log'ları devre dışı bırak
+if (typeof PRODUCTION_MODE === 'undefined') {
+    var PRODUCTION_MODE = true;
+}
+
+if (PRODUCTION_MODE) {
+    console.log = function() {};
+    console.warn = function() {};
+    // console.error korunur (hata ayıklama için)
+}
+
+// Mobil Sidebar Toggle
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('leftSidebarNav');
+    const overlay = document.getElementById('mobileSidebarOverlay');
+    
+    if (!sidebar) {
+        console.error('Sidebar bulunamadı!');
+        return;
+    }
+    
+    if (!overlay) {
+        console.error('Overlay bulunamadı!');
+        return;
+    }
+    
+    // Sidebar açık mı kontrol et
+    const isOpen = sidebar.classList.contains('mobile-sidebar-open');
+    
+    // Hamburger ikonlarını güncelle
+    const hamburgerIcon = document.getElementById('hamburgerIcon');
+    const closeIcon = document.getElementById('closeIcon');
+    
+    if (isOpen) {
+        // Kapat
+        sidebar.classList.remove('mobile-sidebar-open');
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+        
+        // İkonları değiştir
+        if (hamburgerIcon) hamburgerIcon.classList.remove('hidden');
+        if (closeIcon) closeIcon.classList.add('hidden');
+    } else {
+        // Aç
+        sidebar.style.display = 'flex';
+        sidebar.classList.remove('hidden');
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('mobile-sidebar-open');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // İkonları değiştir
+        if (hamburgerIcon) hamburgerIcon.classList.add('hidden');
+        if (closeIcon) closeIcon.classList.remove('hidden');
+    }
+}
+
 // API Base URL (global değişken, sadece bir kez tanımla)
 if (typeof API_BASE === 'undefined') {
     var API_BASE = '../backend/api';
@@ -5,8 +63,6 @@ if (typeof API_BASE === 'undefined') {
 
 // Sayfa yüklendiğinde session kontrolü yap ve gönderileri getir
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('DOM yüklendi, session kontrolü yapılıyor...');
-    
     const pageLoadingOverlay = document.getElementById('pageLoadingOverlay');
     const loadingState = document.getElementById('loadingState');
     const container = document.getElementById('postsContainer');
@@ -26,18 +82,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         const authData = await authResponse.json();
         
-        // Eğer giriş yapılmamışsa login sayfasına yönlendir (replace ile, geri tuşu çalışmasın)
         if (!authData.success) {
-            console.log('Giriş yapılmamış, login sayfasına yönlendiriliyor...', authData);
-            // HTML'i görünür yap (yönlendirme öncesi)
             document.documentElement.style.visibility = 'visible';
             document.documentElement.style.opacity = '1';
             window.location.replace('../index.html');
             return;
         }
         
-        // Session kontrolü başarılı - sayfa içeriğini göster
-        // Önce HTML'i görünür yap
+        // HTML'i görünür yap
         document.documentElement.style.visibility = 'visible';
         document.documentElement.style.opacity = '1';
         
@@ -45,33 +97,54 @@ document.addEventListener('DOMContentLoaded', async function() {
             pageLoadingOverlay.style.display = 'none';
         }
         
-        // Sol navbar'ı göster
+        // Responsive navbar kontrolü
+        const isMobile = window.innerWidth < 1024;
+        
+        // Sol navbar'ı ayarla
         const leftSidebarNav = document.getElementById('leftSidebarNav');
         if (leftSidebarNav) {
-            leftSidebarNav.style.display = 'flex';
+            if (isMobile) {
+                // Mobilde sidebar başlangıçta gizli
+                leftSidebarNav.style.display = 'flex';
+                leftSidebarNav.classList.remove('mobile-sidebar-open');
+                leftSidebarNav.classList.add('-translate-x-full');
+            } else {
+                // Desktop'ta sidebar her zaman görünür
+                leftSidebarNav.style.display = 'flex';
+                leftSidebarNav.classList.remove('-translate-x-full');
+                leftSidebarNav.classList.remove('mobile-sidebar-open');
+            }
         }
         
-        // Üst navbar'ı göster (desktop)
-        const topNavbar = document.querySelector('nav.sticky:not(#leftSidebarNav):not(.lg\\:hidden)');
-        if (topNavbar) {
-            topNavbar.style.display = 'flex';
+        // Desktop navbar'ı sadece desktop'ta göster
+        const desktopNavbar = document.getElementById('desktopTopNavbar');
+        if (desktopNavbar) {
+            if (isMobile) {
+                desktopNavbar.style.display = 'none';
+                desktopNavbar.style.visibility = 'hidden';
+            } else {
+                desktopNavbar.style.display = 'flex';
+                desktopNavbar.style.visibility = 'visible';
+            }
         }
         
-        // Mobil navbar'ı göster
-        const mobileNavbar = document.querySelector('nav.lg\\:hidden');
-        if (mobileNavbar && window.innerWidth < 1024) {
-            mobileNavbar.style.display = 'flex';
+        // Mobil navbar'ı sadece mobilde göster
+        const mobileNavbar = document.getElementById('mobileTopNavbar');
+        if (mobileNavbar) {
+            if (isMobile) {
+                mobileNavbar.style.display = 'flex';
+                mobileNavbar.style.visibility = 'visible';
+            } else {
+                mobileNavbar.style.display = 'none';
+                mobileNavbar.style.visibility = 'hidden';
+            }
         }
         
-        // Body overflow'u düzelt
         document.body.style.overflow = '';
         
-        // Loading state'i gizle ve içeriği göster
         if (loadingState) {
             loadingState.classList.add('hidden');
         }
-        
-        // Ana içeriği göster (desktop ve mobil)
         const mainContent = document.getElementById('mainContent');
         const mainContentMobile = document.getElementById('mainContentMobile');
         if (window.innerWidth >= 1024) {
@@ -88,17 +161,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             container.classList.remove('hidden');
         }
         
-        // Auth UI'ı direkt güncelle (ayrı API çağrısı yapmadan)
         updateAuthUI(true);
         
-        // Navbar profil fotoğrafı kaldırıldı, artık gerek yok
-        
-        console.log('Giriş yapılmış, gönderiler yükleniyor...');
         if (container) {
-            console.log('postsContainer bulundu');
             loadPosts();
-        } else {
-            console.error('postsContainer elementi bulunamadı!');
+            loadUpcomingEvents();
+            loadCommunityStats();
         }
         
         // Arama input'una event listener ekle
@@ -225,24 +293,18 @@ async function handleLogout() {
 // Gönderileri yükle
 async function loadPosts() {
     try {
-        console.log('Gönderiler yükleniyor...', `${API_BASE}/posts.php`);
         const response = await fetch(`${API_BASE}/posts.php`, {
             credentials: 'include'
         });
-        console.log('Response status:', response.status);
         const data = await response.json();
-        console.log('Response data:', data);
         
         if (data.success) {
-            console.log('Gönderiler başarıyla yüklendi:', data.posts.length);
-            // Hem desktop hem mobil container'a gönderileri göster
             displayPosts(data.posts);
             const mobileContainer = document.getElementById('postsContainerMobile');
             if (mobileContainer) {
                 displayPosts(data.posts, mobileContainer);
             }
         } else {
-            console.error('API hatası:', data.message);
             const container = document.getElementById('postsContainer');
             const mobileContainer = document.getElementById('postsContainerMobile');
             const errorMsg = `<p class="text-center text-red-500 py-10">Hata: ${data.message || 'Gönderiler yüklenemedi'}</p>`;
@@ -373,14 +435,14 @@ async function displayPosts(posts, targetContainer = null) {
             </div>
             
             <!-- Alt: Beğeni ve Yorum Butonları -->
-            <div class="px-4 py-3 border-b border-gray-700">
+            <div class="px-4 py-3 border-b border-gray-700" onclick="event.stopPropagation();">
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center space-x-4">
-                        <button onclick="toggleLike(${post.id})" class="flex items-center space-x-2 hover:opacity-70 transition active:scale-95">
+                        <button onclick="toggleLike(${post.id})" class="flex items-center space-x-2 hover:opacity-70 transition active:scale-95 cursor-pointer z-10 relative">
                             <span id="likeBtn-${post.id}" class="text-2xl transition">${isLiked}</span>
                             <span id="likeCount-${post.id}" class="text-white font-semibold">${post.like_count || 0}</span>
                     </button>
-                        <button onclick="showComments(${post.id})" class="flex items-center space-x-2 hover:opacity-70 transition active:scale-95">
+                        <button onclick="showComments(${post.id})" class="flex items-center space-x-2 hover:opacity-70 transition active:scale-95 cursor-pointer z-10 relative">
                             <span class="text-2xl">💬</span>
                             <span id="commentCount-${post.id}" class="text-white font-semibold">${post.comment_count || 0}</span>
                     </button>
@@ -446,24 +508,43 @@ async function toggleLike(postId) {
 
 // Yorumları göster
 async function showComments(postId) {
-    // Yorum modalını aç
-    const modal = document.getElementById('commentsModal');
-    const modalPostId = document.getElementById('modalPostId');
-    modalPostId.value = postId;
-    
-    // Yorumları yükle
-    await loadComments(postId);
-    
-    // Modalı göster
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    try {
+        // Yorum modalını aç
+        const modal = document.getElementById('commentsModal');
+        const modalPostId = document.getElementById('modalPostId');
+        
+        if (!modal) {
+            console.error('Yorum modalı bulunamadı!');
+            return;
+        }
+        
+        if (!modalPostId) {
+            console.error('Modal post ID input bulunamadı!');
+            return;
+        }
+        
+        modalPostId.value = postId;
+        
+        // Yorumları yükle
+        await loadComments(postId);
+        
+        // Modalı göster
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    } catch (error) {
+        console.error('Yorum modalı açılırken hata:', error);
+    }
 }
 
 // Yorumları kapat
 function closeComments() {
     const modal = document.getElementById('commentsModal');
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
 }
 
 // Yorumları yükle
@@ -567,20 +648,39 @@ function formatDate(dateString) {
 
 // Yeni gönderi modalını aç
 function openCreatePostModal() {
+    console.log('openCreatePostModal called');
     // Universal modal kullan
     if (typeof openUniversalModal === 'function') {
         openUniversalModal('post');
-        // Formu temizle
-        const form = document.getElementById('createPostForm');
-        if (form) {
-            form.reset();
-            document.getElementById('postId').value = '';
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
-            document.getElementById('postSubmitText').textContent = 'Paylaş';
+        // Formu temizle (ama dosya inputu korumaya çalış - reset dosyayı da temizler)
+        const postId = document.getElementById('postId');
+        const postTitle = document.getElementById('postTitle');
+        const postDescription = document.getElementById('postDescription');
+        const postCarBrand = document.getElementById('postCarBrand');
+        const postCarModel = document.getElementById('postCarModel');
+        const postSubmitText = document.getElementById('postSubmitText');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        if (postId) postId.value = '';
+        if (postTitle) postTitle.value = '';
+        if (postDescription) postDescription.value = '';
+        if (postCarBrand) postCarBrand.value = '';
+        if (postCarModel) postCarModel.value = '';
+        if (postSubmitText) postSubmitText.textContent = 'Paylaş';
+        if (imagePreviewContainer) imagePreviewContainer.classList.add('hidden');
+        if (imagePreview) imagePreview.src = '';
+        
+        // File input'u manuel temizle (yeni gönderi için)
+        const imageInput = document.getElementById('postImageInput');
+        if (imageInput) {
+            imageInput.value = '';
+            console.log('File input cleared');
         }
     } else {
         // Fallback: eski modal
-        document.getElementById('createPostModal').classList.remove('hidden');
+        const oldModal = document.getElementById('createPostModal');
+        if (oldModal) oldModal.classList.remove('hidden');
     }
     document.body.style.overflow = 'hidden';
     // Varsayılan olarak fotoğraf seçili olsun
@@ -722,13 +822,51 @@ function previewPostMedia(input, type) {
 
 // Eski fonksiyon için geriye dönük uyumluluk
 function previewPostImage(input) {
-    previewPostMedia(input, 'image');
+    console.log('previewPostImage called', input, input.files);
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        console.log('File selected:', file.name, file.type, file.size);
+        
+        // Universal modal içindeki önizleme
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        // Eski modal içindeki önizleme
+        const mediaPreviewContainer = document.getElementById('mediaPreviewContainer');
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            console.log('File loaded successfully');
+            if (imagePreview && imagePreviewContainer) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('hidden');
+                imagePreviewContainer.classList.remove('hidden');
+            }
+            // Eski modal desteği
+            if (mediaPreviewContainer) {
+                const oldImagePreview = document.getElementById('imagePreview');
+                if (oldImagePreview) {
+                    oldImagePreview.src = e.target.result;
+                    oldImagePreview.classList.remove('hidden');
+                    mediaPreviewContainer.classList.remove('hidden');
+                }
+            }
+        };
+        reader.onerror = function(e) {
+            console.error('File read error:', e);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        console.warn('No file selected');
+    }
 }
 
 // Yeni gönderi oluştur
 async function createPost() {
     const form = document.getElementById('createPostForm');
     const errorDiv = document.getElementById('createPostError');
+    
+    console.log('createPost called, form:', form);
     
     if (!form) {
         console.error('Form bulunamadı!');
@@ -739,6 +877,14 @@ async function createPost() {
     const imageInput = document.getElementById('postImageInput');
     const videoInput = document.getElementById('postVideoInput');
     const titleInput = document.getElementById('postTitle');
+    
+    console.log('Inputs found:', {
+        imageInput: imageInput ? 'yes' : 'no',
+        videoInput: videoInput ? 'yes' : 'no',
+        titleInput: titleInput ? 'yes' : 'no',
+        imageFiles: imageInput?.files?.length || 0,
+        videoFiles: videoInput?.files?.length || 0
+    });
     
     // Başlık kontrolü
     if (!titleInput || !titleInput.value.trim()) {
@@ -760,6 +906,11 @@ async function createPost() {
         }
     } else {
         if (!imageInput || !imageInput.files || !imageInput.files[0]) {
+            console.error('Image input veya files eksik:', {
+                imageInput: imageInput,
+                files: imageInput?.files,
+                filesLength: imageInput?.files?.length
+            });
             if (errorDiv) {
                 errorDiv.textContent = 'Lütfen bir fotoğraf seçin';
                 errorDiv.classList.remove('hidden');
@@ -789,21 +940,37 @@ async function createPost() {
     
     // Sadece seçilen medya tipini ekle
     if (selectedMediaType === 'video' && videoInput.files[0]) {
+        console.log('Adding video to FormData:', videoInput.files[0]);
         formData.append('video', videoInput.files[0]);
     } else if (selectedMediaType === 'image' && imageInput.files[0]) {
+        console.log('Adding image to FormData:', imageInput.files[0]);
         formData.append('image', imageInput.files[0]);
+    } else {
+        console.error('No media to upload! selectedMediaType:', selectedMediaType);
     }
     
     if (errorDiv) {
         errorDiv.classList.add('hidden');
     }
     
+    // FormData içeriğini debug için logla
+    console.log('FormData contents:');
+    for (let pair of formData.entries()) {
+        if (pair[1] instanceof File) {
+            console.log(pair[0] + ': FILE -', pair[1].name, pair[1].type, pair[1].size, 'bytes');
+        } else {
+            console.log(pair[0] + ':', pair[1]);
+        }
+    }
+    
     try {
+        console.log('Sending POST request to:', `${API_BASE}/posts.php`);
         const response = await fetch(`${API_BASE}/posts.php`, {
             method: 'POST',
             credentials: 'include',
             body: formData
         });
+        console.log('Response received:', response.status, response.statusText);
         
         // Response'u text olarak oku, sonra JSON'a çevir
         const responseText = await response.text();
@@ -1337,57 +1504,142 @@ async function loadSuggestedUsers() {
     }
 }
 
-// Topluluk istatistiklerini yükle
-async function loadCommunityStats() {
+// Yaklaşan etkinlikleri yükle
+async function loadUpcomingEvents() {
     try {
-        const response = await fetch(`${API_BASE}/posts.php?stats=1`, {
+        const response = await fetch(`${API_BASE}/events.php?upcoming=1&limit=3`, {
             credentials: 'include'
         });
         const data = await response.json();
         
-        const statsContainer = document.getElementById('communityStats');
-        if (statsContainer) {
-            if (data.success && data.stats) {
-                statsContainer.innerHTML = `
-                    <div class="stat-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-2xl">📸</span>
-                                <span class="text-gray-300 text-sm">Toplam Gönderi</span>
+        const eventsContainer = document.getElementById('upcomingEvents');
+        if (eventsContainer) {
+            if (data.success && data.events && data.events.length > 0) {
+                eventsContainer.innerHTML = data.events.map(event => {
+                    // Path düzeltme
+                    let imagePath = event.image_url;
+                    if (imagePath && !imagePath.startsWith('frontend/') && !imagePath.startsWith('http')) {
+                        imagePath = 'frontend/' + imagePath;
+                    }
+                    event.image_url = imagePath;
+                    
+                    const eventDate = new Date(event.event_date);
+                    const now = new Date();
+                    const diffDays = Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24));
+                    
+                    let timeText = '';
+                    if (diffDays === 0) {
+                        timeText = '<span class="text-red-500 font-semibold">Bugün</span>';
+                    } else if (diffDays === 1) {
+                        timeText = '<span class="text-orange-500 font-semibold">Yarın</span>';
+                    } else if (diffDays > 1 && diffDays <= 7) {
+                        timeText = `<span class="text-yellow-500">${diffDays} gün sonra</span>`;
+                    } else {
+                        timeText = `<span class="text-gray-400">${eventDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>`;
+                    }
+                    
+                    return `
+                        <div class="group p-3 rounded-xl hover:bg-red-600/10 transition cursor-pointer border border-gray-700/50 hover:border-red-600/30" onclick="window.location.href='events.html'">
+                            <div class="flex items-start gap-3">
+                                ${event.image_url ? `
+                                <img src="../${event.image_url}" 
+                                     alt="${escapeHtml(event.title)}" 
+                                     class="w-16 h-16 rounded-lg object-cover border border-gray-700"
+                                     onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-16 h-16 bg-gradient-to-br from-red-600/20 to-red-800/20 rounded-lg flex items-center justify-center\\'><span class=\\'text-2xl\\'>📅</span></div>'; console.error('Görsel yüklenemedi: ../${event.image_url}');">
+                                ` : `
+                                <div class="w-16 h-16 bg-gradient-to-br from-red-600/20 to-red-800/20 rounded-lg flex items-center justify-center">
+                                    <span class="text-2xl">📅</span>
+                                </div>
+                                `}
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-white font-semibold text-sm line-clamp-2 group-hover:text-red-400 transition">
+                                        ${escapeHtml(event.title)}
+                                    </p>
+                                    <div class="flex items-center gap-2 mt-1 text-xs">
+                                        ${timeText}
+                                        <span class="text-gray-500">•</span>
+                                        <span class="text-gray-400">📍 ${escapeHtml(event.location || 'Konum belirtilmemiş')}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="text-red-500 font-bold text-xl">${data.stats.total_posts || 0}</span>
                         </div>
-                    </div>
-                    <div class="stat-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-2xl">👥</span>
-                                <span class="text-gray-300 text-sm">Toplam Kullanıcı</span>
-                            </div>
-                            <span class="text-red-500 font-bold text-xl">${data.stats.total_users || 0}</span>
-                        </div>
-                    </div>
-                    <div class="stat-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-2xl pulse-red">❤️</span>
-                                <span class="text-gray-300 text-sm">Toplam Beğeni</span>
-                            </div>
-                            <span class="text-red-500 font-bold text-xl">${data.stats.total_likes || 0}</span>
-                        </div>
+                    `;
+                }).join('');
+            } else {
+                eventsContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <span class="text-4xl mb-2 block">📅</span>
+                        <p class="text-gray-400 text-sm">Yaklaşan etkinlik yok</p>
                     </div>
                 `;
-            } else {
+            }
+        }
+    } catch (error) {
+        console.error('Etkinlikler yüklenirken hata:', error);
+        const eventsContainer = document.getElementById('upcomingEvents');
+        if (eventsContainer) {
+            eventsContainer.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">Yüklenemedi</p>';
+        }
+    }
+}
+
+// Topluluk istatistiklerini yükle
+async function loadCommunityStats() {
+    try {
+        const response = await fetch(`${API_BASE}/community.php`, {
+            credentials: 'include',
+            cache: 'no-cache'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        const statsContainer = document.getElementById('communityStats');
+        if (statsContainer) {
+            if (data.success && data.data) {
+                const stats = data.data;
                 statsContainer.innerHTML = `
-                    <div class="stat-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
+                    <div class="flex items-center justify-between p-3 bg-gradient-to-r from-red-900/20 to-transparent rounded-lg border border-red-600/20 hover:border-red-600/40 transition">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-red-600/20 rounded-lg flex items-center justify-center">
                                 <span class="text-2xl">📸</span>
-                                <span class="text-gray-300 text-sm">Toplam Gönderi</span>
                             </div>
-                            <span class="text-red-500 font-bold text-xl">-</span>
+                            <span class="text-gray-300 text-sm font-medium">Toplam Gönderi</span>
                         </div>
+                        <span class="text-red-400 font-bold text-xl">${stats.total_posts || 0}</span>
                     </div>
+                    <div class="flex items-center justify-between p-3 bg-gradient-to-r from-blue-900/20 to-transparent rounded-lg border border-blue-600/20 hover:border-blue-600/40 transition">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                                <span class="text-2xl">👥</span>
+                            </div>
+                            <span class="text-gray-300 text-sm font-medium">Toplam Üye</span>
+                        </div>
+                        <span class="text-blue-400 font-bold text-xl">${stats.total_users || 0}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gradient-to-r from-pink-900/20 to-transparent rounded-lg border border-pink-600/20 hover:border-pink-600/40 transition">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-pink-600/20 rounded-lg flex items-center justify-center">
+                                <span class="text-2xl">❤️</span>
+                            </div>
+                            <span class="text-gray-300 text-sm font-medium">Toplam Beğeni</span>
+                        </div>
+                        <span class="text-pink-400 font-bold text-xl">${stats.total_likes || 0}</span>
+                    </div>
+                    ${stats.total_events ? `
+                    <div class="flex items-center justify-between p-3 bg-gradient-to-r from-yellow-900/20 to-transparent rounded-lg border border-yellow-600/20 hover:border-yellow-600/40 transition">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 bg-yellow-600/20 rounded-lg flex items-center justify-center">
+                                <span class="text-2xl">📅</span>
+                            </div>
+                            <span class="text-gray-300 text-sm font-medium">Yaklaşan Etkinlik</span>
+                        </div>
+                        <span class="text-yellow-400 font-bold text-xl">${stats.total_events}</span>
+                    </div>
+                    ` : ''}
                 `;
             }
         }
@@ -1395,8 +1647,71 @@ async function loadCommunityStats() {
         console.error('İstatistikler yüklenirken hata:', error);
         const statsContainer = document.getElementById('communityStats');
         if (statsContainer) {
-            statsContainer.innerHTML = '<p class="text-gray-400 text-sm">Yükleniyor...</p>';
+            statsContainer.innerHTML = `
+                <div class="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">⚠️</span>
+                        <span class="text-gray-400 text-sm">Yüklenemedi</span>
+                    </div>
+                </div>
+            `;
         }
     }
 }
+
+// Mobil overlay click handler
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('mobileSidebarOverlay');
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            toggleMobileSidebar();
+        });
+    }
+    
+    // Window resize event - navbar'ları güncelle
+    window.addEventListener('resize', () => {
+        const isMobile = window.innerWidth < 1024;
+        
+        // Desktop navbar
+        const desktopNavbar = document.getElementById('desktopTopNavbar');
+        if (desktopNavbar) {
+            if (isMobile) {
+                desktopNavbar.style.display = 'none';
+                desktopNavbar.style.visibility = 'hidden';
+            } else {
+                desktopNavbar.style.display = 'flex';
+                desktopNavbar.style.visibility = 'visible';
+            }
+        }
+        
+        // Mobil navbar
+        const mobileNavbar = document.getElementById('mobileTopNavbar');
+        if (mobileNavbar) {
+            if (isMobile) {
+                mobileNavbar.style.display = 'flex';
+                mobileNavbar.style.visibility = 'visible';
+            } else {
+                mobileNavbar.style.display = 'none';
+                mobileNavbar.style.visibility = 'hidden';
+            }
+        }
+        
+        // Sidebar
+        const leftSidebarNav = document.getElementById('leftSidebarNav');
+        if (leftSidebarNav) {
+            if (isMobile) {
+                // Mobilde sidebar kapalı başlasın
+                if (!leftSidebarNav.classList.contains('mobile-sidebar-open')) {
+                    leftSidebarNav.classList.add('-translate-x-full');
+                    leftSidebarNav.classList.remove('mobile-sidebar-open');
+                }
+            } else {
+                // Desktop'ta sidebar her zaman açık
+                leftSidebarNav.classList.remove('-translate-x-full');
+                leftSidebarNav.classList.remove('mobile-sidebar-open');
+                if (overlay) overlay.classList.add('hidden');
+            }
+        }
+    });
+});
 
