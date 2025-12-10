@@ -40,7 +40,7 @@ Otomobil severlerin projelerini paylaşabileceği, yeni arkadaşlıklar kurabile
 - ✅ Araç ekleme, düzenleme ve silme
 - ✅ Araç detay sayfası
 - ✅ Öne çıkan araç seçimi
-- ✅ Araç galerisi (Instagram grid)
+- ✅ Araç galerisi 
 - ✅ Araç özellikleri (marka, model, yıl, motor, beygir gücü, renk)
 
 ### 📱 Sosyal Özellikler
@@ -52,7 +52,7 @@ Otomobil severlerin projelerini paylaşabileceği, yeni arkadaşlıklar kurabile
 - ✅ Okunmamış mesaj sayacı
 
 ### 🎉 Etkinlik Yönetimi
-- ✅ Etkinlik oluşturma (sadece adminler)
+- ✅ Etkinlik oluşturma 
 - ✅ Etkinlik listeleme ve detay sayfası
 - ✅ Etkinliklere katılma/ayrılma
 - ✅ Etkinlik katılımcı listesi
@@ -68,7 +68,6 @@ Otomobil severlerin projelerini paylaşabileceği, yeni arkadaşlıklar kurabile
 ### 🎨 Kullanıcı Arayüzü
 - ✅ Modern ve responsive tasarım
 - ✅ Dark theme (kırmızı-siyah tema)
-- ✅ Instagram benzeri grid yapısı
 - ✅ Mobil uyumlu
 - ✅ Touch events desteği
 - ✅ Smooth animasyonlar
@@ -169,12 +168,6 @@ http://localhost/piyasa-garage
 2. Kullanıcı bilgilerinizi girin
 3. Giriş yapın
 
-### Admin Oluşturma
-
-1. Admin paneline erişin: `http://localhost/piyasa-garage/backend/admin_panel.php`
-2. "Yeni Admin Ekle" bölümünden kullanıcı adını girin
-3. Kullanıcıya admin yetkisi verilecek
-
 ### Araç Ekleme
 
 1. Profilinize gidin
@@ -182,13 +175,6 @@ http://localhost/piyasa-garage
 3. Araç bilgilerini doldurun
 4. Fotoğraf yükleyin
 5. Kaydedin
-
-### Etkinlik Oluşturma (Admin)
-
-1. Etkinlikler sayfasına gidin
-2. "Yeni Etkinlik" butonuna tıklayın (sadece adminler görür)
-3. Etkinlik detaylarını girin
-4. Kaydedin
 
 ### Mesajlaşma
 
@@ -279,10 +265,11 @@ piyasa-garage/
 
 ---
 
-## 🎨 Ekran Görüntüleri
 
 ### Ana Sayfa (Keşfet)
 Instagram tarzı gönderi akışı, gerçek zamanlı beğeni ve yorum sistemi
+<img width="1920" height="941" alt="Piyasa Garage - Google Chrome 10 12 2025 06_26_14" src="https://github.com/user-attachments/assets/d4a52456-26e9-4f75-b5ff-2e9c19e738d9" />
+
 
 ### Profil Sayfası
 Kullanıcı bilgileri, gönderi ve araç galerisi, takip istatistikleri
@@ -322,38 +309,13 @@ Gönderi onaylama, kullanıcı yönetimi, istatistikler
 
 ---
 
-## 🤝 Katkıda Bulunma
-
-1. Bu repository'yi fork edin
-2. Yeni bir branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'feat: Add amazing feature'`)
-4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
-
----
-
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
-
----
-
 ## 👨‍💻 Geliştirici
 
-**Piyasa Garage Ekibi**
+**BUĞRA DOĞAN**
 
 - Website: [piyasagarage.com](https://piyasagarage.com)
 - Email: info@piyasagarage.com
 - Telefon: +90 (545) 835 37 67
-
----
-
-## 🙏 Teşekkürler
-
-- [TailwindCSS](https://tailwindcss.com/) - CSS framework
-- [Pexels](https://www.pexels.com/) - Ücretsiz stok fotoğraflar
-- [Google Fonts](https://fonts.google.com/) - Web fontları
-- Tüm katkıda bulunanlar
 
 ---
 
@@ -362,7 +324,6 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 Sorularınız veya sorunlarınız için:
 
 - 📧 Email: info@piyasagarage.com
-- 💬 Issues: [GitHub Issues](https://github.com/yourusername/piyasa-garage/issues)
 
 ---
 
@@ -370,7 +331,8 @@ Sorularınız veya sorunlarınız için:
 
 **⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!**
 
-Made with ❤️ by Piyasa Garage Team
+Made with ❤️ by BUĞRA DOĞAN
 
 </div>
+
 
