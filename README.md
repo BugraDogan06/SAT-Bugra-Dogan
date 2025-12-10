@@ -1,4 +1,7 @@
+<img width="1920" height="938" alt="Piyasa Garage - Google Chrome 10 12 2025 06_26_48" src="https://github.com/user-attachments/assets/437a757b-13cd-4149-a7a7-55c353fb0036" />
+
 # 🚗 Piyasa Garage
+
 
 <div align="center">
 
@@ -273,18 +276,35 @@ Instagram tarzı gönderi akışı, gerçek zamanlı beğeni ve yorum sistemi
 
 ### Profil Sayfası
 Kullanıcı bilgileri, gönderi ve araç galerisi, takip istatistikleri
+<img width="1920" height="942" alt="Piyasa Garage - Google Chrome 10 12 2025 06_27_28" src="https://github.com/user-attachments/assets/413db435-f4a5-4067-9c52-f88a28b7b150" />
+
 
 ### Garaj
 Kullanıcının araçlarının grid görünümü, araç detay sayfası
+<img width="1015" height="787" alt="Piyasa Garage - Google Chrome 10 12 2025 06_27_51" src="https://github.com/user-attachments/assets/4f709a1a-819b-4491-a040-bf7da7134b4d" />
+
 
 ### Etkinlikler
 Yaklaşan ve geçmiş etkinlikler, katılım sistemi
+<img width="1920" height="949" alt="Piyasa Garage - Google Chrome 10 12 2025 06_26_36" src="https://github.com/user-attachments/assets/0f05a103-9b92-4e93-9945-cd7bef24250f" />
 
-### Mesajlaşma
+
+### Mesajlaşma ve Bildirimler
 Gerçek zamanlı direkt mesajlaşma, konuşma listesi
+<img width="490" height="941" alt="Piyasa Garage - Google Chrome 10 12 2025 06_41_24" src="https://github.com/user-attachments/assets/4be20eae-1e5e-4f2d-a3d3-2ac2cc304f11" />
+
+Anlık bildirimler (beğeni,yorum ve takip)
+<img width="485" height="940" alt="Piyasa Garage - Google Chrome 10 12 2025 06_40_19" src="https://github.com/user-attachments/assets/93ba3f99-6c8e-40eb-9258-31f2320167a1" />
+
+
+
+
+
 
 ### Admin Paneli
 Gönderi onaylama, kullanıcı yönetimi, istatistikler
+<img width="1920" height="943" alt="Piyasa Garage - Google Chrome 10 12 2025 06_28_06" src="https://github.com/user-attachments/assets/c6d9f590-f69d-4e7a-83f5-cf588211cf98" />
+
 
 ---
 
@@ -334,5 +354,6 @@ Sorularınız veya sorunlarınız için:
 Made with ❤️ by BUĞRA DOĞAN
 
 </div>
+
 
 
